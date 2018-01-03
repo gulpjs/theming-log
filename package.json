@@ -1,0 +1,58 @@
+{
+  "name": "theming-log",
+  "version": "0.0.0",
+  "description": "Creates a logger with theme for text decoration.",
+  "main": "index.js",
+  "files": [
+    "index.js",
+    "lib/",
+    "web/"
+  ],
+  "scripts": {
+    "lint": "eslint .",
+    "test": "mocha test test/lib",
+    "coverage": "nyc --reporter=lcov --reporter=text-summary mocha",
+    "coveralls": "nyc --reporter=text-lcov npm test | coveralls",
+    "web:build": "npm run web:build-src && npm run web:build-test",
+    "web:build-src": "browserify index.js --standalone themingLog -o web/theming-log.js && cd web && uglifyjs theming-log.js --compress --mangle -o theming-log.min.js --source-map url=theming-log.min.js.map",
+    "web:build-test": "node tool/mktest.js",
+    "chrome:install": "npm i --no-save mocha-chrome",
+    "chrome:test": "mocha-chrome test/web/browser-test.html",
+    "phantom:install": "npm i --no-save phantomjs-prebuilt mocha-phantomjs",
+    "phantom:test": "mocha-phantomjs -p node_modules/.bin/phantomjs test/web/browser-test.html",
+    "build": "npm run lint && npm run coverage && npm run web:build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sttk/theming-log.git"
+  },
+  "keywords": [
+    "log",
+    "logger",
+    "theme",
+    "theming",
+    "color"
+  ],
+  "author": "Takayuki Sato",
+  "engines": {
+    "node": ">= 0.10"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/sttk/theming-log/issues"
+  },
+  "homepage": "https://github.com/sttk/theming-log",
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "coveralls": "^3.0.0",
+    "eslint": "^4.11.0",
+    "mocha": "^3.4.2",
+    "nyc": "^11.3.0"
+  },
+  "dependencies": {
+    "@fav/type.is-function": "^1.0.0",
+    "@fav/type.is-string": "^1.0.0",
+    "browserify": "^15.0.0",
+    "uglify-js": "^3.3.4"
+  }
+}

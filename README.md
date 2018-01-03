@@ -1,0 +1,136 @@
+# [theming-log][repo-url] [![NPM version][npm-img]][npm-url] [![MIT License][mit-img]][mit-url] [![Build Status][travis-img]][travis-url] [![Build Status][appveyor-img]][appveyor-url] [![Coverage Status][coverage-img]][coverage-url]
+
+Creates a logger with theme for text decoration.
+
+## Install
+
+To install from npm:
+
+```sh
+$ npm install --save theming-log
+```
+
+## Usage
+
+For Node.js:
+
+```js
+const themingLog = require('theming-log');
+const ansiColors = require('ansi-colors'); // Use ansi-colors for coloring in this example.
+
+const themes = {
+  ERROR: 'red',
+  WARNING: msg => ansiColors.yellow(msg) + ' ' + String.fromCodePoint(0x1f632),
+  
+  red: ansiColors.red,
+  yellow: ansiColors.yellow,
+  
+  Cry: () => String.fromCodePoint(0x1f622),
+  Astonish: () => String.fromCodePoint(0x1f632),
+};
+
+const log = themingLog(themes);
+
+log('{Cry} This is {ERROR: an error message}.');
+// => '😢 This is \u001b[31man error message\u001b[39m.'
+
+log('This is {WARNING: a warning message }.');
+// => 'This is \u001b[33ma warning message\u001b[39m 😲'
+```
+
+For Web browsers:
+
+```html
+<script src="theming-log.min.js"></script>
+<script>
+function setMessage(msg) {
+  document.getElementById('divMessage').innerHTML += msg + '<br/>';
+}
+
+const themes = {
+  ERROR: 'red',
+  WARNING: msg => '<span style="color:yellow">' + msg + '</span>&nbsp;' + String.fromCodePoint(0x1f632),
+  
+  red: msg => '<span style="color:red">' + msg + '</span>',
+  yellow: msg => '<span style="color:yellow">' + msg + '</span>',
+  
+  Cry: () => String.fromCodePoint(0x1f622),
+  Astonish: () => String.fromCodePoint(0x1f632),
+};
+
+const log = themingLog(themes, setMessage);
+
+window.addEventListener('load', () => {
+  log('{Cry} This is {ERROR: an error message}.');
+  // => '😢 This is <span style="color:red">an error message</span>.'
+
+  log('This is {WARNING: a warning message }');
+  // => 'This is <span style="color:yellow">a warning message</span> 😲'
+});
+</script>
+```
+
+
+## API
+
+### <u>themingLog(themes [, logger]) : function</u>
+
+Creates a logging function based on `console.log` or a specified logging function.
+
+The *themes* is an object which has mappings of theme names and theme functions which decorate a text, and the mapping values can be specified strings which are theme reference names.
+If a mapping value is a theme reference name, a generated logger by this function finds another a theme mapping of which the name matches the reference name.
+
+If there are no theme mapping in *themes*, a generated logger by this function does not decorate a text.
+
+#### Format of a themed text
+
+A themed text can contain theme blocks in itself.
+A theme block is rounded by `{` and `}`, and this can has theme name and block value which are separated by a colon `:`.
+
+If there is no colon in a theme block, the whole text in the block is treated as a theme name.
+
+* `'{ xxxx: yyyy }'` → the theme name is `'xxxx'` and the block value is `'yyyy'`.
+* `'{ xxxx }'` → the theme name is `'xxxx'` and the block value is `''`.
+* `'{ xxxx : }'` → the theme name is `'xxxx'` and the block value is `''`.
+* `'{ : yyyy }'` → `'yyyy'` is treated as a text, not a block value.
+
+Texts in theme blocks are trimmed white spaces of both sides.
+Regarding block value, the escape mark `\\` can prevent trimming.
+Also, this mark can escape `{` and `}`.
+
+* `'{ xxx: \\  yyy \\  }'` → theme name is `'xxx'` and block value is `'  yyy '`.
+* `'\\{ xxx: yyy \\}'` → a text `'{ xxx: yyy }'`, not a theme block.
+
+#### Parameters:
+
+| Parameter   |   Type   | Description                                            |
+|:------------|:--------:|:-------------------------------------------------------|
+| *themes*    | object   | An object which has a set of theming text decorations. |
+| *logger*    | function | A logging function which is based on by a generated logging function. (Optional, and `console.log` in default.) |
+
+#### Returns:
+
+A logging function with theming text decorations.
+
+**Type:** function
+
+
+## License
+
+Copyright (C) 2018 Takayuki Sato.
+
+This program is free software under [MIT][mit-url] License.
+See the file LICENSE in this distribution for more details.
+
+
+[repo-url]: https://github.com/sttk/theming-log/
+[npm-img]: https://img.shields.io/badge/npm-v0.0.0-blue.svg
+[npm-url]: https://www.npmjs.org/package/theming-log/
+[mit-img]: https://img.shields.io/badge/license-MIT-green.svg
+[mit-url]: https://opensource.org/licenses.MIT
+[travis-img]: https://travis-ci.org/sttk/theming-log.svg?branch=master
+[travis-url]: https://travis-ci.org/sttk/theming-log
+[appveyor-img]: https://ci.appveyor.com/api/projects/status/github/sttk/theming-log?branch=master&svg=true
+[appveyor-url]: https://ci.appveyor.com/project/sttk/theming-log
+[coverage-img]: https://coveralls.io/repos/github/sttk/theming-log/badge.svg
+[coverage-url]: https://coveralls.io/github/sttk/theming-log?branch=master
