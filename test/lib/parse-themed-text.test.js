@@ -2,9 +2,10 @@
 
 var chai = require('chai');
 var expect = chai.expect;
-var parse = require('../../lib/parse-text-with-theme');
 
-describe('lib/parse-text-with-theming', function() {
+var parse = require('../../lib/parse-themed-text');
+
+describe('lib/parse-themed-text', function() {
 
   it('Should parse a text which contains no theme block', function() {
     var text = 'This text contains no theme block.';
