@@ -125,4 +125,17 @@ describe('lib/apply-theme', function() {
     parsed = { nodes: [{ theme: 'ERROR', nodes: [''] }] };
     expect(apply(parsed, themeSet)).to.equal('E:[]');
   });
+
+  it('Should support theme for arguments', function() {
+    var parsed = { nodes: [
+      'This text has arg-theme: ',
+      { theme: '1', text: '', },
+      ', ',
+      { theme: '3', nodes: [] },
+      ' and ',
+      { theme: '2', text: 'Two' },
+    ] };
+    expect(apply(parsed, themeSet, ['-', 'A1', 222, true])).to.equal(
+      'This text has arg-theme: A1, true and 222');
+  });
 });

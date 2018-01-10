@@ -175,6 +175,29 @@ describe('theming-log', function() {
       log({});
       expect(logBuf).to.equal('\n\n\n\n\n\n');
     });
+
+    describe('Theme for arguments', function() {
+      it('Should replace arg-themes to argument values', function() {
+        var log = themingLog(themes, origLogger);
+        log('This text has arg-theme: {2} and {1: One}', 'Arg1', 'Arg2');
+        expect(logBuf).to.equal('This text has arg-theme: Arg2 and Arg1\n');
+      });
+
+      it('Should replace arg-themes to block text when corresponding arg are' +
+      '\n\tnot exist', function() {
+        var log = themingLog(themes, origLogger);
+        log('This text has arg-theme: {5} and {3: Three}', 'Arg1', 'Arg2');
+        expect(logBuf).to.equal('This text has arg-theme:  and Three\n');
+      });
+
+      it('Should replace arg-theme in nested theme', function() {
+        var log = themingLog(themes, origLogger);
+        var text = 'This text is { ERROR: a error message: ' +
+          '{1: error code } }.';
+        log(text, 'E01');
+        expect(logBuf).to.equal('This text is Red:[a error message: E01].\n');
+      });
+    });
   });
 
 });

@@ -1,30 +1,31 @@
 (function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.themingLog = f()}})(function(){var define,module,exports;return (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 'use strict';
 
-var parseTextWithTheme = require('./lib/parse-text-with-theme');
+var parseThemedText = require('./lib/parse-themed-text');
 var applyTheme = require('./lib/apply-theme');
 
 function themingLog(theme, logger) {
   logger = logger || console.log;
 
   return function(text) {
-    logger(applyTheme(parseTextWithTheme(text), theme));
+    logger(applyTheme(parseThemedText(text), theme, arguments));
   };
 }
 
 module.exports = themingLog;
 
-},{"./lib/apply-theme":2,"./lib/parse-text-with-theme":3}],2:[function(require,module,exports){
+},{"./lib/apply-theme":2,"./lib/parse-themed-text":4}],2:[function(require,module,exports){
 'use strict';
 
 var isString = require('@fav/type.is-string');
 var isFunction = require('@fav/type.is-function');
+var argTheme = require('./arg-theme');
 
-function applyTheme(parsed, themeSet) {
-  return applyThemeToEachNodes(parsed.nodes, null, themeSet);
+function applyTheme(parsed, themeSet, args) {
+  return applyThemeToEachNodes(parsed.nodes, null, themeSet, args);
 }
 
-function applyThemeToEachNodes(nodes, themeName, themeSet) {
+function applyThemeToEachNodes(nodes, themeName, themeSet, args) {
   var text = '';
 
   for (var i = 0, n = nodes.length; i < n; i++) {
@@ -32,10 +33,12 @@ function applyThemeToEachNodes(nodes, themeName, themeSet) {
     if (isString(node)) {
       text += node;
     } else {
-      if (isString(node.text)) {
+      if (argTheme.is(node.theme)) {
+        text += argTheme.convert(args, node.theme, node.text);
+      } else if (isString(node.text)) {
         text += findTheme(node.theme, themeSet)(node.text);
       } else {
-        text += applyThemeToEachNodes(node.nodes, node.theme, themeSet);
+        text += applyThemeToEachNodes(node.nodes, node.theme, themeSet, args);
       }
     }
   }
@@ -63,12 +66,36 @@ function noop(text) {
 
 module.exports = applyTheme;
 
-},{"@fav/type.is-function":4,"@fav/type.is-string":5}],3:[function(require,module,exports){
+},{"./arg-theme":3,"@fav/type.is-function":7,"@fav/type.is-string":8}],3:[function(require,module,exports){
+'use strict';
+
+var toInteger = require('@fav/type.to-integer');
+
+function isArgTheme(themeName) {
+  return /^[1-9][0-9]*$/.test(themeName);
+}
+
+function convertArgTheme(args, themeName, nodeText) {
+  var argIndex = toInteger(themeName);
+  if (!argIndex || argIndex >= args.length || argIndex <= 0) {
+    return nodeText || '';
+  }
+
+  return args[argIndex];
+}
+
+module.exports = {
+  is: isArgTheme,
+  convert: convertArgTheme,
+};
+
+},{"@fav/type.to-integer":9}],4:[function(require,module,exports){
 'use strict';
 
 var isString = require('@fav/type.is-string');
+var trimUnescapedSpaces = require('./trim-unescaped-spaces');
 
-function parseTextWithTheme(text) {
+function parseThemedText(text) {
   if (!isString(text) || !text) {
     return { nodes: [''] };
   }
@@ -77,7 +104,7 @@ function parseTextWithTheme(text) {
 }
 
 function parseTextStructure(text) {
-  var parsed = { _rest: text, _text: '', /* _theme: null */ };
+  var parsed = { _rest: text, _text: '', /* _theme: undefined */ };
   var openCount = 0;
 
   var found;
@@ -89,7 +116,7 @@ function parseTextStructure(text) {
       }
       case '{': {
         if (!openCount) {
-          addPreviousText(parsed, found.index);
+          addTextNode(parsed, found.index);
           extractThemeName(parsed);
         } else {
           nextCharacter(parsed, found.index);
@@ -101,7 +128,7 @@ function parseTextStructure(text) {
       default: {
         openCount--;
         if (!openCount) {
-          addPreviousBlock(parsed, found.index);
+          addBlockNode(parsed, found.index);
         } else {
           nextCharacter(parsed, found.index);
         }
@@ -112,9 +139,9 @@ function parseTextStructure(text) {
 
   if (parsed._rest || parsed._text || parsed._theme) {
     if (!openCount) {
-      addPreviousText(parsed, parsed._rest.length);
+      addTextNode(parsed, parsed._rest.length);
     } else {
-      addPreviousBlock(parsed, parsed._rest.length);
+      addBlockNode(parsed, parsed._rest.length);
     }
   }
   delete parsed._rest;
@@ -138,7 +165,7 @@ function nextCharacter(parsed, bracketMarkIndex) {
   parsed._rest = parsed._rest.slice(index);
 }
 
-function addPreviousText(parsed, bracketMarkIndex) {
+function addTextNode(parsed, bracketMarkIndex) {
   var text = parsed._text + parsed._rest.slice(0, bracketMarkIndex);
   if (text) {
     if (!Array.isArray(parsed.nodes)) {
@@ -152,8 +179,9 @@ function addPreviousText(parsed, bracketMarkIndex) {
   delete parsed._theme;
 }
 
-function addPreviousBlock(parsed, bracketMarkIndex) {
-  var text = trim(parsed._text + parsed._rest.slice(0, bracketMarkIndex));
+function addBlockNode(parsed, bracketMarkIndex) {
+  var text = parsed._text + parsed._rest.slice(0, bracketMarkIndex);
+  text = trimUnescapedSpaces(text);
   if (text) {
     if (!Array.isArray(parsed.nodes)) {
       parsed.nodes = [];
@@ -194,7 +222,12 @@ function extractThemeName(parsed) {
   parsed._rest = parsed._rest.slice(foundIndex);
 }
 
-function trim(text) {
+module.exports = parseThemedText;
+
+},{"./trim-unescaped-spaces":5,"@fav/type.is-string":8}],5:[function(require,module,exports){
+'use strict';
+
+function trimUnescapedSpaces(text) {
   text = text.replace(/^\s+/, '');
   if (text[0] === '\\') {
     text = text.slice(1);
@@ -204,17 +237,44 @@ function trim(text) {
   if (!found) {
     return text;
   }
+
   if (text[found.index - 1] !== '\\') {
     return text.slice(0, found.index);
   }
+
   /* istanbul ignore next */
   var escapedSpace = text[found.index] || '';
+
   return text.slice(0, found.index - 1) + escapedSpace;
 }
 
-module.exports = parseTextWithTheme;
+module.exports = trimUnescapedSpaces;
 
-},{"@fav/type.is-string":5}],4:[function(require,module,exports){
+},{}],6:[function(require,module,exports){
+'use strict';
+
+function isFiniteNumber(value) {
+  if (typeof value === 'number') {
+    return isFinite(value);
+  }
+  if (Object.prototype.toString.call(value) === '[object Number]') {
+    return isFinite(value);
+  }
+  return false;
+}
+
+function isNotFiniteNumber(value) {
+  return !isFiniteNumber(value);
+}
+
+Object.defineProperty(isFiniteNumber, 'not', {
+  enumerable: true,
+  value: isNotFiniteNumber,
+});
+
+module.exports = isFiniteNumber;
+
+},{}],7:[function(require,module,exports){
 'use strict';
 
 function isFunction(value) {
@@ -232,7 +292,7 @@ Object.defineProperty(isFunction, 'not', {
 
 module.exports = isFunction;
 
-},{}],5:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
 'use strict';
 
 function isString(value) {
@@ -256,5 +316,29 @@ Object.defineProperty(isString, 'not', {
 
 module.exports = isString;
 
-},{}]},{},[1])(1)
+},{}],9:[function(require,module,exports){
+'use strict';
+
+var isString = require('@fav/type.is-string');
+var isFiniteNumber = require('@fav/type.is-finite-number');
+
+function toInteger(value) {
+  if (isString(value)) {
+    value = parseFloat(value);
+  }
+
+  if (isFiniteNumber(value)) {
+    return value < 0 ? Math.ceil(value) : Math.floor(value);
+  }
+
+  if (arguments.length > 1) {
+    return arguments[1];
+  }
+
+  return NaN;
+}
+
+module.exports = toInteger;
+
+},{"@fav/type.is-finite-number":6,"@fav/type.is-string":8}]},{},[1])(1)
 });

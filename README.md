@@ -1,6 +1,6 @@
 # [theming-log][repo-url] [![NPM version][npm-img]][npm-url] [![MIT License][mit-img]][mit-url] [![Build Status][travis-img]][travis-url] [![Build Status][appveyor-img]][appveyor-url] [![Coverage Status][coverage-img]][coverage-url]
 
-Creates a logger with theme for text decoration.
+Creates a logger with theme for text decorations.
 
 ## Install
 
@@ -31,10 +31,10 @@ const themes = {
 
 const log = themingLog(themes);
 
-log('{Cry} This is {ERROR: an error message}.');
-// => '😢 This is \u001b[31man error message\u001b[39m.'
+log('{Cry} This is {ERROR: an error message: {1: error code} }.', 'E001');
+// => '😢 This is \u001b[31man error message: E001\u001b[39m.'
 
-log('This is {WARNING: a warning message }.');
+log('This is {WARNING: a warning message.');
 // => 'This is \u001b[33ma warning message\u001b[39m 😲'
 ```
 
@@ -61,8 +61,8 @@ const themes = {
 const log = themingLog(themes, setMessage);
 
 window.addEventListener('load', () => {
-  log('{Cry} This is {ERROR: an error message}.');
-  // => '😢 This is <span style="color:red">an error message</span>.'
+  log('{Cry} This is {ERROR: an error message: {1: error code} }.', 'E001');
+  // => '😢 This is <span style="color:red">an error message: E001</span>.'
 
   log('This is {WARNING: a warning message }');
   // => 'This is <span style="color:yellow">a warning message</span> 😲'
@@ -85,21 +85,31 @@ If there are no theme mapping in *themes*, a generated logger by this function d
 #### Format of a themed text
 
 A themed text can contain theme blocks in itself.
-A theme block is rounded by `{` and `}`, and this can has theme name and block value which are separated by a colon `:`.
+A theme block is rounded by `{` and `}`, and this can has a theme name and a block content which are separated by a colon `:`.
 
 If there is no colon in a theme block, the whole text in the block is treated as a theme name.
 
-* `'{ xxxx: yyyy }'` → the theme name is `'xxxx'` and the block value is `'yyyy'`.
-* `'{ xxxx }'` → the theme name is `'xxxx'` and the block value is `''`.
-* `'{ xxxx : }'` → the theme name is `'xxxx'` and the block value is `''`.
-* `'{ : yyyy }'` → `'yyyy'` is treated as a text, not a block value.
+* `'{ xxxx: yyyy }'` → the theme name is `'xxxx'` and the block content is `'yyyy'`.
+* `'{ xxxx }'` → the theme name is `'xxxx'` and the block content is `''`.
+* `'{ xxxx : }'` → the theme name is `'xxxx'` and the block content is `''`.
+* `'{ : yyyy }'` → `'yyyy'` is treated as a text, not a block content.
 
 Texts in theme blocks are trimmed white spaces of both sides.
-Regarding block value, the escape mark `\\` can prevent trimming.
+Regarding block content, the escape mark `\\` can prevent trimming.
 Also, this mark can escape `{` and `}`.
 
-* `'{ xxx: \\  yyy \\  }'` → theme name is `'xxx'` and block value is `'  yyy '`.
+* `'{ xxx: \\  yyy \\  }'` → theme name is `'xxx'` and block content is `'  yyy '`.
 * `'\\{ xxx: yyy \\}'` → a text `'{ xxx: yyy }'`, not a theme block.
+
+##### Theme for argument
+
+A logging function created by this function can take multiple arguments.
+A themed text to be converted to an argument has same format with a normal themed text but its theme name is a number starting from 1, which indicates the index of the argument, like `{2}` or `{2: alternative text }`.
+
+A block content in a theme block for argument is outputted alternatively when there is no argument corresponding to a number of a theme name.
+
+* `{ 1 }` → replaced with the second argument (the first argument except the themed text) of logging function, or an empty string if the second argument is not given.
+* `{ 3 : yyyy }` → replaced with the fourth argument (the third argument except the theme text) of logging function, or `'yyyy'` if the fourth argument is not given.
 
 #### Parameters:
 
@@ -110,7 +120,7 @@ Also, this mark can escape `{` and `}`.
 
 #### Returns:
 
-A logging function with theming text decorations.
+A logging function with theme for text decorations.
 
 **Type:** function
 

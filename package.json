@@ -11,7 +11,7 @@
   "scripts": {
     "lint": "eslint .",
     "test": "mocha test test/lib",
-    "coverage": "nyc --reporter=lcov --reporter=text-summary mocha",
+    "coverage": "nyc --reporter=lcov --reporter=text-summary npm test",
     "coveralls": "nyc --reporter=text-lcov npm test | coveralls",
     "web:build": "npm run web:build-src && npm run web:build-test",
     "web:build-src": "browserify index.js --standalone themingLog -o web/theming-log.js && cd web && uglifyjs theming-log.js --compress --mangle -o theming-log.min.js --source-map url=theming-log.min.js.map",
@@ -43,16 +43,17 @@
   },
   "homepage": "https://github.com/sttk/theming-log",
   "devDependencies": {
+    "browserify": "^15.0.0",
     "chai": "^3.5.0",
     "coveralls": "^3.0.0",
     "eslint": "^4.11.0",
     "mocha": "^3.4.2",
-    "nyc": "^11.3.0"
+    "nyc": "^11.3.0",
+    "uglify-js": "^3.3.4"
   },
   "dependencies": {
     "@fav/type.is-function": "^1.0.0",
     "@fav/type.is-string": "^1.0.0",
-    "browserify": "^15.0.0",
-    "uglify-js": "^3.3.4"
+    "@fav/type.to-integer": "^1.0.0"
   }
 }

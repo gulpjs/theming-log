@@ -7,7 +7,7 @@ function themingLog(theme, logger) {
   logger = logger || console.log;
 
   return function(text) {
-    logger(applyTheme(parseThemedText(text), theme));
+    logger(applyTheme(parseThemedText(text), theme, arguments));
   };
 }
 
