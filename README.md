@@ -95,7 +95,7 @@ If there is no colon in a theme block, the whole text in the block is treated as
 * `'{ : yyyy }'` → `'yyyy'` is treated as a text, not a block content.
 
 Texts in theme blocks are trimmed white spaces of both sides.
-Regarding block content, the escape mark `\\` can prevent trimming.
+Regarding block content, the escape mark `\` can prevent trimming.
 Also, this mark can escape `{` and `}`.
 
 * `'{ xxx: \\  yyy \\  }'` → theme name is `'xxx'` and block content is `'  yyy '`.
@@ -109,7 +109,7 @@ A themed text to be converted to an argument has same format with a normal theme
 A block content in a theme block for argument is outputted alternatively when there is no argument corresponding to a number of a theme name.
 
 * `{ 1 }` → replaced with the second argument (the first argument except the themed text) of logging function, or an empty string if the second argument is not given.
-* `{ 3 : yyyy }` → replaced with the fourth argument (the third argument except the theme text) of logging function, or `'yyyy'` if the fourth argument is not given.
+* `{ 3 : yyyy }` → replaced with the fourth argument (the third argument except the themed text) of logging function, or `'yyyy'` if the fourth argument is not given.
 
 #### Parameters:
 
