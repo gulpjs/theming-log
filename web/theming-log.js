@@ -4,7 +4,7 @@
 var parseThemedText = require('./lib/parse-themed-text');
 var applyTheme = require('./lib/apply-theme');
 
-function themingLog(theme, logger) {
+function themingLog(theme, logger /* , ...args */) {
   logger = logger || console.log;
 
   return function(text) {
@@ -19,10 +19,11 @@ module.exports = themingLog;
 
 var isString = require('@fav/type.is-string');
 var isFunction = require('@fav/type.is-function');
+var getDeep = require('@fav/prop.get-deep');
 var argTheme = require('./arg-theme');
 
 function applyTheme(parsed, themeSet, args) {
-  return applyThemeToEachNodes(parsed.nodes, null, themeSet, args);
+  return applyThemeToEachNodes(parsed.nodes, null, themeSet, args || []);
 }
 
 function applyThemeToEachNodes(nodes, themeName, themeSet, args) {
@@ -47,7 +48,11 @@ function applyThemeToEachNodes(nodes, themeName, themeSet, args) {
 }
 
 function findTheme(themeName, themeSet) {
-  var theme = themeSet[themeName];
+  if (!isString(themeName)) {
+    return noop;
+  }
+
+  var theme = getDeep(themeSet, themeName.split('.'));
 
   if (isFunction(theme)) {
     return theme;
@@ -66,7 +71,7 @@ function noop(text) {
 
 module.exports = applyTheme;
 
-},{"./arg-theme":3,"@fav/type.is-function":7,"@fav/type.is-string":8}],3:[function(require,module,exports){
+},{"./arg-theme":3,"@fav/prop.get-deep":6,"@fav/type.is-function":9,"@fav/type.is-string":10}],3:[function(require,module,exports){
 'use strict';
 
 var toInteger = require('@fav/type.to-integer');
@@ -89,7 +94,7 @@ module.exports = {
   convert: convertArgTheme,
 };
 
-},{"@fav/type.to-integer":9}],4:[function(require,module,exports){
+},{"@fav/type.to-integer":11}],4:[function(require,module,exports){
 'use strict';
 
 var isString = require('@fav/type.is-string');
@@ -224,7 +229,7 @@ function extractThemeName(parsed) {
 
 module.exports = parseThemedText;
 
-},{"./trim-unescaped-spaces":5,"@fav/type.is-string":8}],5:[function(require,module,exports){
+},{"./trim-unescaped-spaces":5,"@fav/type.is-string":10}],5:[function(require,module,exports){
 'use strict';
 
 function trimUnescapedSpaces(text) {
@@ -253,6 +258,61 @@ module.exports = trimUnescapedSpaces;
 },{}],6:[function(require,module,exports){
 'use strict';
 
+var isArray = require('@fav/type.is-array');
+
+function getDeep(obj, propPath) {
+  if (arguments.length < 2) {
+    return obj;
+  }
+
+  if (!isArray(propPath)) {
+    return undefined;
+  }
+
+  if (obj == null) {
+    return Boolean(propPath.length) ? undefined : obj;
+  }
+
+  for (var i = 0, n = propPath.length; i < n; i++) {
+    var prop = propPath[i];
+    try {
+      obj = obj[prop];
+    } catch (e) {
+      // If `prop` is an array of Symbol, obj[prop] throws an error,
+      // but this function suppress it and return undefined.
+      obj = undefined;
+    }
+    if (obj == null) {
+      break;
+    }
+  }
+
+  return obj;
+}
+
+module.exports = getDeep;
+
+},{"@fav/type.is-array":7}],7:[function(require,module,exports){
+'use strict';
+
+function isArray(value) {
+  return Array.isArray(value);
+}
+
+function isNotArray(value) {
+  return !Array.isArray(value);
+}
+
+Object.defineProperty(isArray, 'not', {
+  enumerable: true,
+  value: isNotArray,
+});
+
+module.exports = isArray;
+
+},{}],8:[function(require,module,exports){
+'use strict';
+
 function isFiniteNumber(value) {
   if (typeof value === 'number') {
     return isFinite(value);
@@ -274,7 +334,7 @@ Object.defineProperty(isFiniteNumber, 'not', {
 
 module.exports = isFiniteNumber;
 
-},{}],7:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
 'use strict';
 
 function isFunction(value) {
@@ -292,7 +352,7 @@ Object.defineProperty(isFunction, 'not', {
 
 module.exports = isFunction;
 
-},{}],8:[function(require,module,exports){
+},{}],10:[function(require,module,exports){
 'use strict';
 
 function isString(value) {
@@ -316,7 +376,7 @@ Object.defineProperty(isString, 'not', {
 
 module.exports = isString;
 
-},{}],9:[function(require,module,exports){
+},{}],11:[function(require,module,exports){
 'use strict';
 
 var isString = require('@fav/type.is-string');
@@ -340,5 +400,5 @@ function toInteger(value) {
 
 module.exports = toInteger;
 
-},{"@fav/type.is-finite-number":6,"@fav/type.is-string":8}]},{},[1])(1)
+},{"@fav/type.is-finite-number":8,"@fav/type.is-string":10}]},{},[1])(1)
 });

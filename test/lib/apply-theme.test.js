@@ -17,6 +17,17 @@ var themeSet = {
   TypeError: 'ERROR',
   Emphasis: 'HIGHLIGHT',
   BadTheme: 'bad theme',
+
+  info: {
+    important: {
+      title: function(v) {
+        return '**' + v + '**';
+      },
+      message: function(v) {
+        return '!:[' + v + ']';
+      },
+    }
+  },
 };
 
 describe('lib/apply-theme', function() {
@@ -137,5 +148,20 @@ describe('lib/apply-theme', function() {
     ] };
     expect(apply(parsed, themeSet, ['-', 'A1', 222, true])).to.equal(
       'This text has arg-theme: A1, true and 222');
+
+    expect(apply(parsed, themeSet)).to.equal(
+      'This text has arg-theme: ,  and Two');
+  });
+
+  it('Should support theme defined by nested properties', function() {
+    var parsed = { nodes: [
+      ' - ',
+      { theme: 'info.important.title', text: 'NOTICE' },
+      ' ',
+      { theme: 'info.important.message', text: 'This is an important info' },
+      '.',
+    ] };
+    expect(apply(parsed, themeSet, [])).to.equal(
+      ' - **NOTICE** !:[This is an important info].');
   });
 });

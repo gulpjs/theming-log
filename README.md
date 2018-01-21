@@ -18,20 +18,24 @@ For Node.js:
 const themingLog = require('theming-log');
 const ansiColors = require('ansi-colors'); // Use ansi-colors for coloring in this example.
 
+const emojiCry = String.fromCodePoint(0x1f622);
+const emojiAstonish = String.fromCodePoint(0x1f632);
+
 const themes = {
   ERROR: 'red',
-  WARNING: msg => ansiColors.yellow(msg) + ' ' + String.fromCodePoint(0x1f632),
+  WARNING: msg => ansiColors.yellow(msg) + ' ' + emojiAstonish,
   
   red: ansiColors.red,
   yellow: ansiColors.yellow,
   
-  Cry: () => String.fromCodePoint(0x1f622),
-  Astonish: () => String.fromCodePoint(0x1f632),
+  emoji: {
+    Cry: () => emojiCry,
+  }
 };
 
 const log = themingLog(themes);
 
-log('{Cry} This is {ERROR: an error message: {1: error code} }.', 'E001');
+log('{emoji.Cry} This is {ERROR: an error message: {1: error code} }.', 'E001');
 // => '😢 This is \u001b[31man error message: E001\u001b[39m.'
 
 log('This is {WARNING: a warning message.');

@@ -52,6 +52,7 @@
     "uglify-js": "^3.3.4"
   },
   "dependencies": {
+    "@fav/prop.get-deep": "^1.0.0",
     "@fav/type.is-function": "^1.0.0",
     "@fav/type.is-string": "^1.0.0",
     "@fav/type.to-integer": "^1.0.0"

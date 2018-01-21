@@ -3,7 +3,7 @@
 var parseThemedText = require('./lib/parse-themed-text');
 var applyTheme = require('./lib/apply-theme');
 
-function themingLog(theme, logger) {
+function themingLog(theme, logger /* , ...args */) {
   logger = logger || console.log;
 
   return function(text) {
