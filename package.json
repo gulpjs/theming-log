@@ -1,6 +1,6 @@
 {
   "name": "theming-log",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Creates a logger with theme for text decoration.",
   "main": "index.js",
   "files": [
