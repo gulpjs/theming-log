@@ -19,15 +19,10 @@ const themingLog = require('theming-log');
 const ansiColors = require('ansi-colors'); // Use ansi-colors for coloring in this example.
 
 const emojiCry = String.fromCodePoint(0x1f622);
-const emojiAstonish = String.fromCodePoint(0x1f632);
 
 const themes = {
-  ERROR: 'red',
-  WARNING: msg => ansiColors.yellow(msg) + ' ' + emojiAstonish,
-  
+  ERROR: 'red',  
   red: ansiColors.red,
-  yellow: ansiColors.yellow,
-  
   emoji: {
     Cry: () => emojiCry,
   }
@@ -38,8 +33,8 @@ const log = themingLog(themes);
 log('{emoji.Cry} This is {ERROR: an error message: {1: error code} }.', 'E001');
 // => '😢 This is \u001b[31man error message: E001\u001b[39m.'
 
-log('This is {WARNING: a warning message.');
-// => 'This is \u001b[33ma warning message\u001b[39m 😲'
+var str = themingLog.format('{emoji.Cry} This is {ERROR: an error message: {1: error code} }.', 'E001');
+// str === '😢 This is \u001b[31man error message: E001\u001b[39m.'
 ```
 
 For Web browsers:
@@ -53,13 +48,8 @@ function setMessage(msg) {
 
 const themes = {
   ERROR: 'red',
-  WARNING: msg => '<span style="color:yellow">' + msg + '</span>&nbsp;' + String.fromCodePoint(0x1f632),
-  
   red: msg => '<span style="color:red">' + msg + '</span>',
-  yellow: msg => '<span style="color:yellow">' + msg + '</span>',
-  
   Cry: () => String.fromCodePoint(0x1f622),
-  Astonish: () => String.fromCodePoint(0x1f632),
 };
 
 const log = themingLog(themes, setMessage);
@@ -68,8 +58,8 @@ window.addEventListener('load', () => {
   log('{Cry} This is {ERROR: an error message: {1: error code} }.', 'E001');
   // => '😢 This is <span style="color:red">an error message: E001</span>.'
 
-  log('This is {WARNING: a warning message }');
-  // => 'This is <span style="color:yellow">a warning message</span> 😲'
+  var str = themingLog.format('{emoji.Cry} This is {ERROR: an error message: {1: error code} }.', 'E001');
+  // str === '😢 This is <span style="color:red">an error message: E001</span>.'
 });
 </script>
 ```
@@ -127,6 +117,25 @@ A block content in a theme block for argument is outputted alternatively when th
 A logging function with theme for text decorations.
 
 **Type:** function
+
+
+### <u>.format(themes, fmt [, ...args]) : string</u>
+
+Returns a formatted string from *fmt* with *themes* and *args*. 
+
+#### Parameters:
+
+| Parameter   |   Type   | Description                                            |
+|:------------|:--------:|:-------------------------------------------------------|
+| *themes*    | object   | An object which has a set of theming text decorations. |
+| *fmt*       | string   | a themed text (explained above)        |
+| *args*      | *any*    | themes for arguments (explained above) |
+
+#### Returns:
+
+A formatted string.
+
+**Type:** string
 
 
 ## License
