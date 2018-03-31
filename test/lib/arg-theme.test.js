@@ -22,15 +22,15 @@ describe('lib/arg-theme', function() {
 
   it('Should convert an arg identifier to an argument value', function() {
     var args = ['Arg0', 'Arg1', 'Arg2', 'Arg3'];
-    expect(argTheme.convert(args, '-1', 'X1-')).to.equal('X1-');
-    expect(argTheme.convert(args, '0', 'X0')).to.equal('X0');
+    expect(argTheme.convert(args, '-1', 'X1-')).to.equal('');
+    expect(argTheme.convert(args, '0', 'X0')).to.equal('');
     expect(argTheme.convert(args, '1', 'X1')).to.equal('Arg1');
     expect(argTheme.convert(args, '2', 'X2')).to.equal('Arg2');
     expect(argTheme.convert(args, '3', 'X3')).to.equal('Arg3');
-    expect(argTheme.convert(args, '4', 'X4')).to.equal('X4');
+    expect(argTheme.convert(args, '4', 'X4')).to.equal('');
 
-    expect(argTheme.convert(args, '', 'X')).to.equal('X');
-    expect(argTheme.convert(args, 'a', 'X')).to.equal('X');
+    expect(argTheme.convert(args, '', 'X')).to.equal('');
+    expect(argTheme.convert(args, 'a', 'X')).to.equal('');
   });
 
 });

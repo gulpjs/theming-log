@@ -150,7 +150,7 @@ describe('lib/apply-theme', function() {
       'This text has arg-theme: A1, true and 222');
 
     expect(apply(parsed, themeSet)).to.equal(
-      'This text has arg-theme: ,  and Two');
+      'This text has arg-theme: ,  and ');
   });
 
   it('Should support theme defined by nested properties', function() {

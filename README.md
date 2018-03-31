@@ -98,12 +98,12 @@ Also, this mark can escape `{` and `}`.
 ##### Theme for argument
 
 A logging function created by this function can take multiple arguments.
-A themed text to be converted to an argument has same format with a normal themed text but its theme name is a number starting from 1, which indicates the index of the argument, like `{2}` or `{2: alternative text }`.
+A themed text to be converted to an argument has same format with a normal themed text but its theme name is a number starting from 1, which indicates the index of the argument, like `{2}` or `{2: Explanatory text }`.
 
 A block content in a theme block for argument is outputted alternatively when there is no argument corresponding to a number of a theme name.
 
 * `{ 1 }` → replaced with the second argument (the first argument except the themed text) of logging function, or an empty string if the second argument is not given.
-* `{ 3 : yyyy }` → replaced with the fourth argument (the third argument except the themed text) of logging function, or `'yyyy'` if the fourth argument is not given.
+* `{ 3 : yyyy }` → replaced with the fourth argument (the third argument except the themed text) of logging function, or an empty string if the fourth argument is not given. (`'yyyy'` is not used.)
 
 #### Parameters:
 

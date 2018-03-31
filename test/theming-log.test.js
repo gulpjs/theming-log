@@ -183,11 +183,11 @@ describe('theming-log', function() {
         expect(logBuf).to.equal('This text has arg-theme: Arg2 and Arg1\n');
       });
 
-      it('Should replace arg-themes to block text when corresponding arg are' +
-      '\n\tnot exist', function() {
+      it('Should replace arg-themes to an empty string when corresponding' +
+      '\n\targ are not exist', function() {
         var log = themingLog(themes, origLogger);
         log('This text has arg-theme: {5} and {3: Three}', 'Arg1', 'Arg2');
-        expect(logBuf).to.equal('This text has arg-theme:  and Three\n');
+        expect(logBuf).to.equal('This text has arg-theme:  and \n');
       });
 
       it('Should replace arg-theme in nested theme', function() {
