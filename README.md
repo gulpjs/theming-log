@@ -20,7 +20,7 @@ const ansiColors = require('ansi-colors'); // Use ansi-colors for coloring in th
 
 const emojiCry = String.fromCodePoint(0x1f622);
 
-const themes = {
+const theme = {
   ERROR: 'red',  
   red: ansiColors.red,
   emoji: {
@@ -28,7 +28,7 @@ const themes = {
   }
 };
 
-const log = themingLog(themes);
+const log = themingLog(theme);
 
 log('{emoji.Cry} This is {ERROR: an error message: {1: error code} }.', 'E001');
 // => '😢 This is \u001b[31man error message: E001\u001b[39m.'
@@ -46,19 +46,19 @@ function setMessage(msg) {
   document.getElementById('divMessage').innerHTML += msg + '<br/>';
 }
 
-const themes = {
+const theme = {
   ERROR: 'red',
   red: msg => '<span style="color:red">' + msg + '</span>',
   Cry: () => String.fromCodePoint(0x1f622),
 };
 
-const log = themingLog(themes, setMessage);
+const log = themingLog(theme, setMessage);
 
 window.addEventListener('load', () => {
   log('{Cry} This is {ERROR: an error message: {1: error code} }.', 'E001');
   // => '😢 This is <span style="color:red">an error message: E001</span>.'
 
-  var str = themingLog.format('{emoji.Cry} This is {ERROR: an error message: {1: error code} }.', 'E001');
+  var str = themingLog.format('{Cry} This is {ERROR: an error message: {1: error code} }.', 'E001');
   // str === '😢 This is <span style="color:red">an error message: E001</span>.'
 });
 </script>
@@ -67,50 +67,21 @@ window.addEventListener('load', () => {
 
 ## API
 
-### <u>themingLog(themes [, logger]) : function</u>
+### <u>themingLog(theme [, logger]) : function</u>
 
-Creates a logging function based on `console.log` or a specified logging function.
+Creates a logging function based on `console.log` or a specified logging function. This created logging function converts a template text which contains style blocks (for example, `'{MSG: a message.}'`) to a decorated text.
 
-The *themes* is an object which has mappings of theme names and theme functions which decorate a text, and the mapping values can be specified strings which are theme reference names.
-If a mapping value is a theme reference name, a generated logger by this function finds another a theme mapping of which the name matches the reference name.
-
-If there are no theme mapping in *themes*, a generated logger by this function does not decorate a text.
-
-#### Format of a themed text
-
-A themed text can contain theme blocks in itself.
-A theme block is rounded by `{` and `}`, and this can has a theme name and a block content which are separated by a colon `:`.
-
-If there is no colon in a theme block, the whole text in the block is treated as a theme name.
-
-* `'{ xxxx: yyyy }'` → the theme name is `'xxxx'` and the block content is `'yyyy'`.
-* `'{ xxxx }'` → the theme name is `'xxxx'` and the block content is `''`.
-* `'{ xxxx : }'` → the theme name is `'xxxx'` and the block content is `''`.
-* `'{ : yyyy }'` → `'yyyy'` is treated as a text, not a block content.
-
-Texts in theme blocks are trimmed white spaces of both sides.
-Regarding block content, the escape mark `\` can prevent trimming.
-Also, this mark can escape `{` and `}`.
-
-* `'{ xxx: \\  yyy \\  }'` → theme name is `'xxx'` and block content is `'  yyy '`.
-* `'\\{ xxx: yyy \\}'` → a text `'{ xxx: yyy }'`, not a theme block.
-
-##### Theme for argument
-
-A logging function created by this function can take multiple arguments.
-A themed text to be converted to an argument has same format with a normal themed text but its theme name is a number starting from 1, which indicates the index of the argument, like `{2}` or `{2: Explanatory text }`.
-
-A block content in a theme block for argument is outputted alternatively when there is no argument corresponding to a number of a theme name.
-
-* `{ 1 }` → replaced with the second argument (the first argument except the themed text) of logging function, or an empty string if the second argument is not given.
-* `{ 3 : yyyy }` → replaced with the fourth argument (the third argument except the themed text) of logging function, or an empty string if the fourth argument is not given. (`'yyyy'` is not used.)
+The *theme* is an plain object which maps pairs of a style name (`'MSG'` in the above example) and either a style function or a reference name to another style name.
+A style function receives a block content (`'a message'` in the above example) and returns a converted text.
+If specifying a reference name, a style function of another style name indicated by the reference name is used.
+If a specified style name is not found in *theme*, the created logging function does not decorate a text.
 
 #### Parameters:
 
 | Parameter   |   Type   | Description                                            |
 |:------------|:--------:|:-------------------------------------------------------|
-| *themes*    | object   | An object which has a set of theming text decorations. |
-| *logger*    | function | A logging function which is based on by a generated logging function. (Optional, and `console.log` in default.) |
+| *theme*     | object   | An object which is a map of style names and either style functions or reference names. |
+| *logger*    | function | A logging function which is based on by a created logging function. (Optional, and `console.log` in default.) |
 
 #### Returns:
 
@@ -118,22 +89,100 @@ A logging function with theme for text decorations.
 
 **Type:** function
 
+The API of a returned function is as follows:
 
-### <u>.format(themes, fmt [, ...args]) : string</u>
+* ***log*** **(template [, ...args]) : Void**
 
-Returns a formatted string from *fmt* with *themes* and *args*. 
+    | Parameters |  Type  | Description                        |
+    |:-----------|:------:|:-----------------------------------|
+    | *template* | string | A template text (explained [above](#template)) |
+    | *args*     | *any*  | Style blocks for arguments (explained [above](#argument)) |
+
+<a name="template"></a>
+
+#### Format of a template text  
+
+A template text can contain style blocks in itself.
+A style block is rounded by `{` and `}`, and this can has a pair of a style name and a block content which are separated by a colon `:`.
+If there is no colon in a style block, the whole text in the block is operated as a style name.
+
+* `'{ xxxx: yyyy }'` → the style name is `'xxxx'` and the block content is `'yyyy'`.
+* `'{ xxxx }'` → the style name is `'xxxx'` and the block content is `''`.
+* `'{ xxxx : }'` → the style name is `'xxxx'` and the block content is `''`.
+* `'{ : yyyy }'` → `'yyyy'` is operated as a text, not a block content.
+
+Texts in style blocks, both a style name and a block content, are trimmed white spaces on both sides.
+Regarding a block content, the escape mark `\` can prevent trimming.
+Also, this mark can escape `{` and `}`.
+
+* `'{ xxx: \\ yyy\\  }'` → theme name is `'xxx'` and block content is `' yyy '`.
+* `'\\{ xxx: yyy \\}'` → a text `'{ xxx: yyy }'`, not a style block.
+
+
+***NOTICE:*** *Both a function created by <b>themingLog</b> and <b>themingLog.format</b> use `\` as an escape mark, therefore `\` in a template text are erased.
+So you need to take care of `\` marks, especially path separators on Windows.*
+
+```js
+var log = themingLog({}, console.log);
+var format = themingLog.format;
+
+// Erases '\\' as a escape mark.
+log('C:\\\\abc\\\\def\\\\ghi');
+// => console.log('C:\\abc\\def\\ghi') => C:\abc\def\ghi
+
+// Not erases '\\' in arguments.
+log('{1}', 'C:\\abc\\def\\ghi');
+// => console.log('C:\\abc\\def\\ghi') => C:\abc\def\ghi
+
+
+// Erases '\\' as a escape mark.
+console.log(format({}, 'C:\\\\abc\\\\def\\\\ghi'));
+// => console.log('C:\\abc\\def\\ghi') => C:\abc\def\ghi
+
+// Not erases '\\' in arguments.
+console.log(format({}, '{1}', 'C:\\abc\\def\\ghi'));
+// => console.log('C:\\abc\\def\\ghi') => C:\abc\def\ghi
+
+
+// format() and next log() erase double '\\' as escape marks
+log(format({}, 'C:\\\\\\\\abc\\\\\\\\def\\\\\\\\ghi'));
+// => log('C:\\\\abc\\\\def\\\\ghi') => C:\abc\def\ghi
+
+// Only log() erases '\\' as a escape mark.
+log(format({}, '{1}', 'C:\\\\abc\\\\def\\\\ghi'));
+// => log('C:\\\\abc\\\\def\\\\ghi') => C:\abc\def\ghi
+
+// Neither log() nor format() erase '\\'
+log('{1}', format({}, '{1}', 'C:\\abc\\def\\ghi'));
+// => log('{1]", 'C:\\abc\\def\\ghi') => C:\abc\def\ghi
+```
+
+<a name="argument"></a>
+
+##### Style block for argument
+
+A logging function can take multiple arguments.
+A style block to be converted to an argument is same format with a normal style block but its style name is a number starting from 1, which indicates the index of the argument, like `{2}` or `{2: Explanatory text }`. A block content in a style block for an argument is never used, so it can be used as an explanatory text.
+
+* `{ 1 }` → replaced with the second argument (the first argument except the template text) of logging function, or an empty string if the second argument is not given.
+* `{ 3 : yyyy }` → replaced with the fourth argument (the third argument except the template text) of logging function, or an empty string if the fourth argument is not given. (`'yyyy'` is never used.)
+
+
+### <u>themingLog.format(theme, template [, ...args]) : string</u>
+
+Returns a converted string from *template* with *theme* and *args*. 
 
 #### Parameters:
 
 | Parameter   |   Type   | Description                                            |
 |:------------|:--------:|:-------------------------------------------------------|
-| *themes*    | object   | An object which has a set of theming text decorations. |
-| *fmt*       | string   | a themed text (explained above)        |
-| *args*      | *any*    | themes for arguments (explained above) |
+| *theme*     | object   | An object which is a map of style names and either style functions or reference names. |
+| *template*  | string   | A template text (explained [above](#template)) |
+| *args*      | *any*    | Style blocks for arguments (explained [above](#argument)) |
 
 #### Returns:
 
-A formatted string.
+A converted string.
 
 **Type:** string
 
