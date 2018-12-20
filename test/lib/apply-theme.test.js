@@ -14,9 +14,9 @@ var themeSet = {
   HIGHLIGHT: function(v) {
     return 'H:[' + v + ']';
   },
-  TypeError: 'ERROR',
-  Emphasis: 'HIGHLIGHT',
-  BadTheme: 'bad theme',
+  TypeError: '{ERROR:{1}}',
+  Emphasis: '{HIGHLIGHT:{1}}',
+  BadTheme: '{bad theme:{1}}',
 
   info: {
     important: {

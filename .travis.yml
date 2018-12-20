@@ -12,6 +12,8 @@ node_js:
   - "7"
   - "8"
   - "9"
+  - "10"
+  - "11"
 
 after_success:
   - if [ $(echo "${TRAVIS_NODE_VERSION}" | cut -d'.' -f1) -ge 4 ]; then

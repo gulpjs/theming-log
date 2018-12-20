@@ -108,11 +108,11 @@ describe('theming-log', function() {
       grinning: function() { return ':smile:'; },
 
       INFO: null,
-      WARNING: 'yellow',
-      ERROR: 'red',
-      HIGHLIGHT: 'bold',
+      WARNING: '{yellow: {1}}',
+      ERROR: '{red: {1}}',
+      HIGHLIGHT: '{bold: {1}}',
 
-      TypeError: 'error',
+      TypeError: '{error: {1}}',
       AppError: function(v) { return 'Magenta:[' + v + ']'; },
     };
 

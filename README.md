@@ -21,7 +21,7 @@ const ansiColors = require('ansi-colors'); // Use ansi-colors for coloring in th
 const emojiCry = String.fromCodePoint(0x1f622);
 
 const theme = {
-  ERROR: 'red',  
+  ERROR: '{red: {1}}',  
   red: ansiColors.red,
   emoji: {
     Cry: () => emojiCry,
@@ -47,7 +47,7 @@ function setMessage(msg) {
 }
 
 const theme = {
-  ERROR: 'red',
+  ERROR: '{red: {1}}',
   red: msg => '<span style="color:red">' + msg + '</span>',
   Cry: () => String.fromCodePoint(0x1f622),
 };
@@ -71,23 +71,20 @@ window.addEventListener('load', () => {
 
 Creates a logging function based on `console.log` or a specified logging function. This created logging function converts a template text which contains style blocks (for example, `'{MSG: a message.}'`) to a decorated text.
 
-The *theme* is an plain object which maps pairs of a style name (`'MSG'` in the above example) and either a style function or a reference name to another style name.
+The *theme* is an plain object which maps pairs of a style name (`'MSG'` in the above example) and either a style function or a template text.
 A style function receives a block content (`'a message'` in the above example) and returns a converted text.
-If specifying a reference name, a style function of another style name indicated by the reference name is used.
-If a specified style name is not found in *theme*, the created logging function does not decorate a text.
+If a block content is a template text, it is parsed and converted with theme equally.
 
-#### Parameters:
+**Parameters:**
 
 | Parameter   |   Type   | Description                                            |
 |:------------|:--------:|:-------------------------------------------------------|
-| *theme*     | object   | An object which is a map of style names and either style functions or reference names. |
+| *theme*     | object   | An object which is a map of style names and either style functions or template texts. |
 | *logger*    | function | A logging function which is based on by a created logging function. (Optional, and `console.log` in default.) |
 
-#### Returns:
+**Returns:**
 
 A logging function with theme for text decorations.
-
-**Type:** function
 
 The API of a returned function is as follows:
 
@@ -111,7 +108,7 @@ If there is no colon in a style block, the whole text in the block is operated a
 * `'{ xxxx : }'` → the style name is `'xxxx'` and the block content is `''`.
 * `'{ : yyyy }'` → `'yyyy'` is operated as a text, not a block content.
 
-Texts in style blocks, both a style name and a block content, are trimmed white spaces on both sides.
+Texts in a style block, both a style name and a block content, are trimmed white spaces on both sides.
 Regarding a block content, the escape mark `\` can prevent trimming.
 Also, this mark can escape `{` and `}`.
 
@@ -172,19 +169,17 @@ A style block to be converted to an argument is same format with a normal style 
 
 Returns a converted string from *template* with *theme* and *args*. 
 
-#### Parameters:
+**Parameters:**
 
 | Parameter   |   Type   | Description                                            |
 |:------------|:--------:|:-------------------------------------------------------|
-| *theme*     | object   | An object which is a map of style names and either style functions or reference names. |
+| *theme*     | object   | An object which is a map of style names and either style functions or template texts. |
 | *template*  | string   | A template text (explained [above](#template)) |
 | *args*      | *any*    | Style blocks for arguments (explained [above](#argument)) |
 
-#### Returns:
+**Returns:**
 
 A converted string.
-
-**Type:** string
 
 
 ## License
