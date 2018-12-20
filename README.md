@@ -73,8 +73,7 @@ Creates a logging function based on `console.log` or a specified logging functio
 
 The *theme* is an plain object which maps pairs of a style name (`'MSG'` in the above example) and either a style function or a template text.
 A style function receives a block content (`'a message'` in the above example) and returns a converted text.
-If specifying a template text, it is parsed and applied with theme equally.
-If a specified style name is not found in *theme*, the created logging function does not decorate a text.
+If a block content is a template text, it is parsed and converted with theme equally.
 
 **Parameters:**
 
