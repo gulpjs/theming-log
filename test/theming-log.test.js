@@ -200,4 +200,70 @@ describe('theming-log', function() {
     });
   });
 
+  describe('Support to output multiple line logs', function() {
+
+    var theme = {
+      red: function(v) {
+        return 'RED:[' + v + ']';
+      },
+    };
+
+    var logBuf;
+    function origLogger(v) {
+      logBuf.push(v);
+    }
+
+    beforeEach(function() {
+      logBuf = [];
+    });
+
+    it('Should output multiple logs by line when containing EOLs', function() {
+      var log = themingLog(theme, origLogger, true);
+      log('{red: First line.}\n{red: Second line.}\n{red: Third line.}');
+      expect(logBuf).to.deep.equal([
+        'RED:[First line.]',
+        'RED:[Second line.]',
+        'RED:[Third line.]',
+      ]);
+    });
+
+    it('Should output single log when containing no EOLs', function() {
+      var log = themingLog(theme, origLogger, true);
+      log('{red: First line.}');
+      expect(logBuf).to.deep.equal([
+        'RED:[First line.]',
+      ]);
+    });
+
+    it('Should output an empty log when a template is empty', function() {
+      var log = themingLog(theme, origLogger, true);
+      log('');
+      log(null);
+      log();
+      expect(logBuf).to.deep.equal(['', '', '']);
+    });
+
+    it('Should output single log when `lineSep` flag is false', function() {
+      var log = themingLog(theme, origLogger, false);
+      log('{red: First line.}\n{red: Second line.}\n{red: Third line.}');
+      expect(logBuf).to.deep.equal([
+        'RED:[First line.]\nRED:[Second line.]\nRED:[Third line.]',
+      ]);
+    });
+
+    it('Should output multiple lines to console.log when 2nd arg is true',
+    function() {
+      var logBuf = [];
+      var logBak = console.log;
+      console.log = function(v) {
+        logBuf.push(v);
+      };
+      var log = themingLog(theme, true);
+
+      log('aaa\nbbb\r\nccc\rddd');
+      expect(logBuf).to.deep.equal(['aaa', 'bbb', 'ccc', 'ddd']);
+
+      console.log = logBak;
+    });
+  });
 });

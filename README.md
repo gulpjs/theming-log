@@ -67,7 +67,7 @@ window.addEventListener('load', () => {
 
 ## API
 
-### <u>themingLog(theme [, logger]) : function</u>
+### <u>themingLog(theme [, logger] [, lineSep]) : function</u>
 
 Creates a logging function based on `console.log` or a specified logging function. This created logging function converts a template text which contains style blocks (for example, `'{MSG: a message.}'`) to a decorated text.
 
@@ -75,12 +75,16 @@ The *theme* is an plain object which maps pairs of a style name (`'MSG'` in the 
 A style function receives a block content (`'a message'` in the above example) and returns a converted text.
 If a block content is a template text, it is parsed and converted with theme equally.
 
+If the 2nd or 3rd argument is boolean, it is set to *lineSep*.
+If *lineSep* is true, the created logging function split a converted text into multiple lines with newline codes and output them line by line.
+
 **Parameters:**
 
 | Parameter   |   Type   | Description                                            |
 |:------------|:--------:|:-------------------------------------------------------|
 | *theme*     | object   | An object which is a map of style names and either style functions or template texts. |
 | *logger*    | function | A logging function which is based on by a created logging function. (Optional, and `console.log` in default.) |
+| *lineSep*   | boolean  | If true, A logging function split a converted text into multiple lines with newline codes and output them line by line. |
 
 **Returns:**
 
@@ -167,7 +171,7 @@ A style block to be converted to an argument is same format with a normal style 
 
 ### <u>themingLog.format(theme, template [, ...args]) : string</u>
 
-Returns a converted string from *template* with *theme* and *args*. 
+Parses *template* text and converts it to a decorated string with *theme* and *args*. 
 
 **Parameters:**
 
@@ -180,6 +184,23 @@ Returns a converted string from *template* with *theme* and *args*.
 **Returns:**
 
 A converted string.
+
+
+### <u>themingLog.formatLines(theme, template [, ...args]) : Array</u>
+
+Parses *template* text, converts it to a decorated string with *theme* and *args*, and splits the decorated string to multiple lines with newline codes. 
+
+**Parameters:**
+
+| Parameter   |   Type   | Description                                            |
+|:------------|:--------:|:-------------------------------------------------------|
+| *theme*     | object   | An object which is a map of style names and either style functions or template texts. |
+| *template*  | string   | A template text (explained [above](#template)) |
+| *args*      | *any*    | Style blocks for arguments (explained [above](#argument)) |
+
+**Returns:**
+
+An array of converted string splitted by newline codes.
 
 
 ## License

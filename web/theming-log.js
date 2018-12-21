@@ -4,11 +4,21 @@
 var parseThemedText = require('./lib/parse-themed-text');
 var applyTheme = require('./lib/apply-theme');
 
-function themingLog(theme, logger) {
-  logger = logger || console.log;
+function themingLog(theme, logger, lineSep) {
+  if (typeof logger === 'boolean') {
+    lineSep = logger;
+    logger = console.log;
+  } else if (typeof logger !== 'function') {
+    logger = console.log;
+  }
 
   return function(text /*, ...args */) {
-    logger(applyTheme(parseThemedText(text), theme, arguments));
+    var text = applyTheme(parseThemedText(text), theme, arguments);
+    if (lineSep) {
+      text.split(/\r\n|\r|\n/).forEach(logger);
+      return;
+    }
+    logger(text);
   };
 }
 
@@ -17,10 +27,12 @@ function format(theme, text /* , ...args */) {
   return applyTheme(parseThemedText(text), theme, args);
 }
 
-Object.defineProperty(themingLog, 'format', {
-  enumerable: true,
-  value: format,
-});
+function formatLines(/* theme, text, ...args */) {
+  return format.apply(this, arguments).split(/\r\n|\r|\n/);
+}
+
+themingLog.format = format;
+themingLog.formatLines = formatLines;
 
 module.exports = themingLog;
 
