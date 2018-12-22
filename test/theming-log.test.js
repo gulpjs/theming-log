@@ -13,8 +13,8 @@ describe('theming-log', function() {
     it('Should output texts to console.log', function() {
       var logBak = console.log;
       var logBuf = '';
-      console.log = function(v) {
-        logBuf += v;
+      console.log = function() {
+        logBuf += Array.prototype.join.call(arguments, ' ');
       };
 
       var logger = themingLog({});
@@ -27,8 +27,8 @@ describe('theming-log', function() {
 
     it('Should output texts to specified logger', function() {
       var logBuf = '';
-      function origLogger(v) {
-        logBuf += v;
+      function origLogger() {
+        logBuf += Array.prototype.join.call(arguments, ' ');
       }
 
       var logger = themingLog({}, origLogger);
@@ -40,8 +40,8 @@ describe('theming-log', function() {
 
   describe('Output log with decorations by themes', function() {
     var logBuf = '';
-    function origLogger(v) {
-      logBuf += v + '\n';
+    function origLogger() {
+      logBuf += Array.prototype.join.call(arguments, ' ') + '\n';
     }
 
     var themes = {
@@ -209,8 +209,8 @@ describe('theming-log', function() {
     };
 
     var logBuf;
-    function origLogger(v) {
-      logBuf.push(v);
+    function origLogger() {
+      logBuf.push(Array.prototype.join.call(arguments, ' '));
     }
 
     beforeEach(function() {
@@ -255,8 +255,8 @@ describe('theming-log', function() {
     function() {
       var logBuf = [];
       var logBak = console.log;
-      console.log = function(v) {
-        logBuf.push(v);
+      console.log = function() {
+        logBuf.push(Array.prototype.join.call(arguments, ' '));
       };
       var log = themingLog(theme, true);
 
