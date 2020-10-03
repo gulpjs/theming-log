@@ -19,7 +19,7 @@ node_js:
   - "14"
 
 after_success:
-  - if [ $(echo "${TRAVIS_NODE_VERSION}" | cut -d'.' -f1) -ge 4 ]; then
+  - if [ $(echo "${TRAVIS_NODE_VERSION}" | cut -d'.' -f1) -ge 6 ]; then
       npm run coveralls;
     fi
 
