@@ -24,7 +24,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/sttk/theming-log.git"
+    "url": "https://github.com/gulpjs/theming-log.git"
   },
   "keywords": [
     "log",
@@ -33,15 +33,15 @@
     "theming",
     "color"
   ],
-  "author": "Takayuki Sato",
+  "author": "Gulp Team <team@gulpjs.com> (https://gulpjs.com/)",
   "engines": {
     "node": ">= 0.10"
   },
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/sttk/theming-log/issues"
+    "url": "https://github.com/gulpjs/theming-log/issues"
   },
-  "homepage": "https://github.com/sttk/theming-log",
+  "homepage": "https://github.com/gulpjs/theming-log",
   "devDependencies": {
     "browserify": "^16.5.2",
     "chai": "^3.5.0",

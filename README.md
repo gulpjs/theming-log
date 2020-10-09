@@ -205,20 +205,20 @@ An array of converted string splitted by newline codes.
 
 ## License
 
-Copyright (C) 2018-2020 Takayuki Sato.
+Copyright (C) 2018-2020 Gulp Team.
 
 This program is free software under [MIT][mit-url] License.
 See the file LICENSE in this distribution for more details.
 
 
-[repo-url]: https://github.com/sttk/theming-log/
+[repo-url]: https://github.com/gulpjs/theming-log/
 [npm-img]: https://img.shields.io/badge/npm-v2.1.1-blue.svg
 [npm-url]: https://www.npmjs.org/package/theming-log/
 [mit-img]: https://img.shields.io/badge/license-MIT-green.svg
 [mit-url]: https://opensource.org/licenses.MIT
-[travis-img]: https://travis-ci.org/sttk/theming-log.svg?branch=master
-[travis-url]: https://travis-ci.org/sttk/theming-log
-[appveyor-img]: https://ci.appveyor.com/api/projects/status/github/sttk/theming-log?branch=master&svg=true
-[appveyor-url]: https://ci.appveyor.com/project/sttk/theming-log
-[coverage-img]: https://coveralls.io/repos/github/sttk/theming-log/badge.svg
-[coverage-url]: https://coveralls.io/github/sttk/theming-log?branch=master
+[travis-img]: https://travis-ci.org/gulpjs/theming-log.svg?branch=master
+[travis-url]: https://travis-ci.org/gulpjs/theming-log
+[appveyor-img]: https://ci.appveyor.com/api/projects/status/github/gulpjs/theming-log?branch=master&svg=true
+[appveyor-url]: https://ci.appveyor.com/project/gulpjs/theming-log
+[coverage-img]: https://coveralls.io/repos/github/gulpjs/theming-log/badge.svg
+[coverage-url]: https://coveralls.io/github/gulpjs/theming-log?branch=master
