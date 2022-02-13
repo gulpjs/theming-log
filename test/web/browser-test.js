@@ -16,14 +16,15 @@ describe('formatLines', function() {
     blue: function(v) { return 'BLUE:[' + v + ']'; },
   };
 
-  it('Format text without eol', function() {
+  it('Format text without eol', function(done) {
     var out = formatLines(theme, '{red: This text contains no eol}');
     expect(out).to.deep.equal([
       'RED:[This text contains no eol]',
     ]);
+    done();
   });
 
-  it('Format text with eol', function() {
+  it('Format text with eol', function(done) {
     var out = formatLines(theme,
       '{blue: This text }\n' +
       '{blue: contains EOLs.}\n' +
@@ -36,6 +37,7 @@ describe('formatLines', function() {
       'RED:[Notice when themes stride over]',
       'RED:[multiple lines.]',
     ]);
+    done();
   });
 });
 
@@ -73,22 +75,25 @@ describe('format', function() {
       AppError: function(v) { return 'Magenta:[' + v + ']'; },
     };
 
-    it('Should format no themed text', function() {
+    it('Should format no themed text', function(done) {
       var out = format(themes, 'This text contains no theme');
       expect(out).to.equal('This text contains no theme');
+      done();
     });
 
-    it('Should format text using theme', function() {
+    it('Should format text using theme', function(done) {
       var out = format(themes,
         'This {bold: text} contains {red: themed { italic : message }}.');
       expect(out).to.equal('This Bold:[text] contains Red:[themed ' +
         'Italic:[message]].');
+      done();
     });
 
-    it('Should replace arg-themes to argument values', function() {
+    it('Should replace arg-themes to argument values', function(done) {
       var out = format(themes,
         'This text has arg-theme: {2} and {1: One}', 'Arg1', 'Arg2');
       expect(out).to.equal('This text has arg-theme: Arg2 and Arg1');
+      done();
     });
   });
 
@@ -108,7 +113,7 @@ var expect = chai.expect;
 describe('theming-log', function() {
 
   describe('Specify logger', function() {
-    it('Should output texts to console.log', function() {
+    it('Should output texts to console.log', function(done) {
       var logBak = console.log;
       var logBuf = '';
       console.log = function() {
@@ -121,9 +126,10 @@ describe('theming-log', function() {
 
       console.log = logBak;
       expect(logBuf).to.equal('Hello, world!');
+      done();
     });
 
-    it('Should output texts to specified logger', function() {
+    it('Should output texts to specified logger', function(done) {
       var logBuf = '';
       function origLogger() {
         logBuf += Array.prototype.join.call(arguments, ' ');
@@ -133,6 +139,7 @@ describe('theming-log', function() {
       logger('Hello, ');
       logger('world!');
       expect(logBuf).to.equal('Hello, world!');
+      done();
     });
   });
 
@@ -159,45 +166,50 @@ describe('theming-log', function() {
       AppError: function(v) { return 'Magenta:[' + v + ']'; },
     };
 
-    beforeEach(function() {
+    beforeEach(function(done) {
       logBuf = '';
+      done();
     });
 
-    it('Should output no themed text', function() {
+    it('Should output no themed text', function(done) {
       var log = themingLog(themes, origLogger);
       log('This text contains no theme');
       expect(logBuf).to.equal('This text contains no theme\n');
+      done();
     });
 
-    it('Should output text using theme', function() {
+    it('Should output text using theme', function(done) {
       var log = themingLog(themes, origLogger);
       log('This {bold: text} contains {red: themed { italic : message }}.');
       expect(logBuf).to.equal('This Bold:[text] contains Red:[themed ' +
         'Italic:[message]].\n');
+      done();
     });
 
-    it('Should output text using theme of reference name', function() {
+    it('Should output text using theme of reference name', function(done) {
       var log = themingLog(themes, origLogger);
       log('{INFO: This text contains {HIGHLIGHT: theme of reference name}}.');
       expect(logBuf).to.equal('This text contains Bold:[theme of reference ' +
         'name].\n');
+      done();
     });
 
-    it('Should treat unclosed theme as theme name', function() {
+    it('Should treat unclosed theme as theme name', function(done) {
       var log = themingLog(themes, origLogger);
       log('This text is {grinning');
       expect(logBuf).to.equal('This text is :smile:\n');
+      done();
     });
 
-    it('Should output normally when a theme value function is no arg',
-    function() {
+    it('Should output normally when a theme value function is no arg', function(done) {
       var log = themingLog(themes, origLogger);
       log('{grinning} This is {ERROR: an error message}.');
       expect(logBuf).to.equal(
         ':smile: This is Red:[an error message].\n');
+      done();
     });
 
-    it('Should not trim escaped spaces in theme block', function() {
+    it('Should not trim escaped spaces in theme block', function(done) {
       var log = themingLog(themes, origLogger);
       log('This text is {red:    caution      }.');
       log('This text is {red: \\  caution  \\   }.');
@@ -205,55 +217,60 @@ describe('theming-log', function() {
         'This text is Red:[caution].\n' +
         'This text is Red:[  caution   ].\n' +
       '');
+      done();
     });
 
-    it('Should ignore escaped brackets', function() {
+    it('Should ignore escaped brackets', function(done) {
       var log = themingLog(themes, origLogger);
       log('This \\{yellow text {blue: has \\} escaped theme} blocks\\}');
       expect(logBuf).to.equal(
         'This {yellow text Blue:[has } escaped theme] blocks}\n'
       );
+      done();
     });
 
-    it('Should ignore escape mark at last position', function() {
+    it('Should ignore escape mark at last position', function(done) {
       var log = themingLog(themes, origLogger);
       log('This text ends with escape mark\\');
       expect(logBuf).to.equal(
         'This text ends with escape mark\n'
       );
+      done();
     });
 
-    it('Should ignore a theme block of which name and value are both empty',
-    function() {
+    it('Should ignore a theme block of which name and value are both empty', function(done) {
       var log = themingLog(themes, origLogger);
       log('This text has { : }empty theme block');
       expect(logBuf).to.equal(
         'This text has empty theme block\n'
       );
+      done();
     });
 
-    it('Should treat a theme block of which name is empty as a text',
-    function() {
+    it('Should treat a theme block of which name is empty as a text', function(done) {
       var log = themingLog(themes, origLogger);
       log('This text has an { : empty name } theme block');
       expect(logBuf).to.equal(
         'This text has an empty name theme block\n'
       );
+      done();
     });
 
-    it('Should return an empty string when arg is null', function() {
+    it('Should return an empty string when arg is null', function(done) {
       var log = themingLog(themes, origLogger);
       log(null);
       expect(logBuf).to.equal('\n');
+      done();
     });
 
-    it('Should return an empty string when arg is empty', function() {
+    it('Should return an empty string when arg is empty', function(done) {
       var log = themingLog(themes, origLogger);
       log('');
       expect(logBuf).to.equal('\n');
+      done();
     });
 
-    it('Should return an empty string when arg is not a string', function() {
+    it('Should return an empty string when arg is not a string', function(done) {
       var log = themingLog(themes, origLogger);
       log(true);
       expect(logBuf).to.equal('\n');
@@ -272,28 +289,32 @@ describe('theming-log', function() {
 
       log({});
       expect(logBuf).to.equal('\n\n\n\n\n\n');
+
+      done();
     });
 
     describe('Theme for arguments', function() {
-      it('Should replace arg-themes to argument values', function() {
+      it('Should replace arg-themes to argument values', function(done) {
         var log = themingLog(themes, origLogger);
         log('This text has arg-theme: {2} and {1: One}', 'Arg1', 'Arg2');
         expect(logBuf).to.equal('This text has arg-theme: Arg2 and Arg1\n');
+        done();
       });
 
-      it('Should replace arg-themes to an empty string when corresponding' +
-      '\n\targ are not exist', function() {
+      it('Should replace arg-themes to an empty string when corresponding arg are not exist', function(done) {
         var log = themingLog(themes, origLogger);
         log('This text has arg-theme: {5} and {3: Three}', 'Arg1', 'Arg2');
         expect(logBuf).to.equal('This text has arg-theme:  and \n');
+        done();
       });
 
-      it('Should replace arg-theme in nested theme', function() {
+      it('Should replace arg-theme in nested theme', function(done) {
         var log = themingLog(themes, origLogger);
         var text = 'This text is { ERROR: a error message: ' +
           '{1: error code } }.';
         log(text, 'E01');
         expect(logBuf).to.equal('This text is Red:[a error message: E01].\n');
+        done();
       });
     });
   });
@@ -311,11 +332,12 @@ describe('theming-log', function() {
       logBuf.push(Array.prototype.join.call(arguments, ' '));
     }
 
-    beforeEach(function() {
+    beforeEach(function(done) {
       logBuf = [];
+      done();
     });
 
-    it('Should output multiple logs by line when containing EOLs', function() {
+    it('Should output multiple logs by line when containing EOLs', function(done) {
       var log = themingLog(theme, origLogger, true);
       log('{red: First line.}\n{red: Second line.}\n{red: Third line.}');
       expect(logBuf).to.deep.equal([
@@ -323,34 +345,37 @@ describe('theming-log', function() {
         'RED:[Second line.]',
         'RED:[Third line.]',
       ]);
+      done();
     });
 
-    it('Should output single log when containing no EOLs', function() {
+    it('Should output single log when containing no EOLs', function(done) {
       var log = themingLog(theme, origLogger, true);
       log('{red: First line.}');
       expect(logBuf).to.deep.equal([
         'RED:[First line.]',
       ]);
+      done();
     });
 
-    it('Should output an empty log when a template is empty', function() {
+    it('Should output an empty log when a template is empty', function(done) {
       var log = themingLog(theme, origLogger, true);
       log('');
       log(null);
       log();
       expect(logBuf).to.deep.equal(['', '', '']);
+      done();
     });
 
-    it('Should output single log when `lineSep` flag is false', function() {
+    it('Should output single log when `lineSep` flag is false', function(done) {
       var log = themingLog(theme, origLogger, false);
       log('{red: First line.}\n{red: Second line.}\n{red: Third line.}');
       expect(logBuf).to.deep.equal([
         'RED:[First line.]\nRED:[Second line.]\nRED:[Third line.]',
       ]);
+      done();
     });
 
-    it('Should output multiple lines to console.log when 2nd arg is true',
-    function() {
+    it('Should output multiple lines to console.log when 2nd arg is true', function(done) {
       var logBuf = [];
       var logBak = console.log;
       console.log = function() {
@@ -362,6 +387,7 @@ describe('theming-log', function() {
       expect(logBuf).to.deep.equal(['aaa', 'bbb', 'ccc', 'ddd']);
 
       console.log = logBak;
+      done();
     });
   });
 });

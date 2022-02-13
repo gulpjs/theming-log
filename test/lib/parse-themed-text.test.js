@@ -7,12 +7,13 @@ var parse = require('../../lib/parse-themed-text');
 
 describe('lib/parse-themed-text', function() {
 
-  it('Should parse a text which contains no theme block', function() {
+  it('Should parse a text which contains no theme block', function(done) {
     var text = 'This text contains no theme block.';
     expect(parse(text)).to.deep.equal({ nodes: [text] });
+    done();
   });
 
-  it('Should parse a text which contains one theme block', function() {
+  it('Should parse a text which contains one theme block', function(done) {
     var text = 'This text contains {HIGHLIGHT: one theme} block.';
     expect(parse(text)).to.deep.equal({
       nodes: [
@@ -21,9 +22,10 @@ describe('lib/parse-themed-text', function() {
         ' block.',
       ],
     });
+    done();
   });
 
-  it('Should parse a text which contains multiple theme block', function() {
+  it('Should parse a text which contains multiple theme block', function(done) {
     var text = 'This {BOLD: text} contains {UNDERLINE: multiple} ' +
       '{ITALIC: theme block}.';
 
@@ -38,9 +40,10 @@ describe('lib/parse-themed-text', function() {
         '.',
       ],
     });
+    done();
   });
 
-  it('Should parse a text which contains nested theme block', function() {
+  it('Should parse a text which contains nested theme block', function(done) {
     var text = 'This text contains {BOLD: nested {ITALIC: theme} block}';
 
     expect(parse(text)).to.deep.equal({
@@ -55,13 +58,15 @@ describe('lib/parse-themed-text', function() {
         },
       ],
     });
+    done();
   });
 
-  it('Should parse an empty text', function() {
+  it('Should parse an empty text', function(done) {
     expect(parse('')).to.deep.equal({ nodes: [''] });
+    done();
   });
 
-  it('Should ignore opening bracket after escape mark (`\\`).', function() {
+  it('Should ignore opening bracket after escape mark (`\\`).', function(done) {
     var text = 'This text has a \\{AAA: escaped opening bracket';
 
     expect(parse(text)).to.deep.equal({
@@ -77,9 +82,10 @@ describe('lib/parse-themed-text', function() {
         ' opening bracket',
       ],
     });
+    done();
   });
 
-  it('Should ignore closing bracket after escape mark (`\\`).', function() {
+  it('Should ignore closing bracket after escape mark (`\\`).', function(done) {
     var text = 'This text\\} has a {AAA: escaped \\} closing bracket}';
 
     expect(parse(text)).to.deep.equal({
@@ -88,9 +94,10 @@ describe('lib/parse-themed-text', function() {
         { theme: 'AAA', text: 'escaped } closing bracket' },
       ],
     });
+    done();
   });
 
-  it('Should ignore unescaped and no pair closing bracket', function() {
+  it('Should ignore unescaped and no pair closing bracket', function(done) {
     var text = 'This text has unescaped } closing brackets}';
 
     expect(parse(text)).to.deep.equal({
@@ -98,27 +105,30 @@ describe('lib/parse-themed-text', function() {
         'This text has unescaped } closing brackets}',
       ],
     });
+    done();
   });
 
-  it('Should ignore escape mark after escape mark (`\\`).', function() {
+  it('Should ignore escape mark after escape mark (`\\`).', function(done) {
     var text = 'This \\\\text\\ contains \\\\\\escape\\\\\\\\ marks';
     expect(parse(text)).to.deep.equal({
       nodes: [
         'This \\text contains \\escape\\\\ marks'
       ],
     });
+    done();
   });
 
-  it('Should end normally when ending with escape mark.', function() {
+  it('Should end normally when ending with escape mark.', function(done) {
     var text = 'This \\\\text\\ contains \\\\\\escape\\\\\\\\ marks\\';
     expect(parse(text)).to.deep.equal({
       nodes: [
         'This \\text contains \\escape\\\\ marks'
       ],
     });
+    done();
   });
 
-  it('Should end normally when the first node is a theme block', function() {
+  it('Should end normally when the first node is a theme block', function(done) {
     var text = '{HIGHLIGHT: This text } starts with a theme block';
     expect(parse(text)).to.deep.equal({
       nodes: [
@@ -126,9 +136,10 @@ describe('lib/parse-themed-text', function() {
         ' starts with a theme block',
       ],
     });
+    done();
   });
 
-  it('Should end normally when the last node is a theme block', function() {
+  it('Should end normally when the last node is a theme block', function(done) {
     var text = 'This text ends with {ITALIC: a theme block}';
     expect(parse(text)).to.deep.equal({
       nodes: [
@@ -136,9 +147,10 @@ describe('lib/parse-themed-text', function() {
         { theme: 'ITALIC', text: 'a theme block' },
       ],
     });
+    done();
   });
 
-  it('Should parse normally when the whole text is a theme block', function() {
+  it('Should parse normally when the whole text is a theme block', function(done) {
     var text = '{AAA: This text all is in a theme block}';
 
     expect(parse(text)).to.deep.equal({
@@ -146,10 +158,10 @@ describe('lib/parse-themed-text', function() {
         { theme: 'AAA', text: 'This text all is in a theme block' },
       ],
     });
+    done();
   });
 
-  it('Should treat as a theme block of which value is empty when a theme' +
-  '\n\tblock has no colon', function() {
+  it('Should treat as a theme block of which value is empty when a theme block has no colon', function(done) {
     var text = 'This text has a theme block which has {no name}.';
 
     expect(parse(text)).to.deep.equal({
@@ -159,9 +171,10 @@ describe('lib/parse-themed-text', function() {
         '.',
       ],
     });
+    done();
   });
 
-  it('Should treat unclosed theme block as theme name', function() {
+  it('Should treat unclosed theme block as theme name', function(done) {
     var text = 'This text has {ERROR: a theme block which is {unclosed.';
 
     expect(parse(text)).to.deep.equal({
@@ -173,10 +186,10 @@ describe('lib/parse-themed-text', function() {
         ] },
       ],
     });
+    done();
   });
 
-  it('Should treat as a text node when a theme block has an empty theme name',
-  function() {
+  it('Should treat as a text node when a theme block has an empty theme name', function(done) {
     var text = 'This text has a theme block of which {: name} is empty.';
 
     expect(parse(text)).to.deep.equal({
@@ -186,10 +199,10 @@ describe('lib/parse-themed-text', function() {
         ' is empty.',
       ],
     });
+    done();
   });
 
-  it('Should get theme block normaly even when block text is empty',
-  function() {
+  it('Should get theme block normaly even when block text is empty', function(done) {
     var text = 'This text has a theme block of which {TT: } text is empty.';
 
     expect(parse(text)).to.deep.equal({
@@ -199,10 +212,10 @@ describe('lib/parse-themed-text', function() {
         ' text is empty.',
       ],
     });
+    done();
   });
 
-  it('Should ignore when block theme and block text are both empty',
-  function() {
+  it('Should ignore when block theme and block text are both empty', function(done) {
     var text = 'This text has a theme block of which { : } text is empty.';
 
     expect(parse(text)).to.deep.equal({
@@ -211,9 +224,10 @@ describe('lib/parse-themed-text', function() {
         ' text is empty.',
       ],
     });
+    done();
   });
 
-  it('Should trim white spaces in a theme block text', function() {
+  it('Should trim white spaces in a theme block text', function(done) {
     var text = 'This text has a theme block which has trimmed ' +
       '{UNDERLINE:   white spaces     }.';
 
@@ -224,10 +238,10 @@ describe('lib/parse-themed-text', function() {
         '.',
       ],
     });
+    done();
   });
 
-  it('Should not trim the next white space of a escape mark (`\\`)' +
-  '\n\tin a theme block text', function() {
+  it('Should not trim the next white space of a escape mark (`\\`) in a theme block text', function(done) {
     var text = 'This text has a theme block which has ' +
       '{UNDERLINE: \\  white spaces  \\   }.';
 
@@ -238,5 +252,6 @@ describe('lib/parse-themed-text', function() {
         '.',
       ],
     });
+    done();
   });
 });

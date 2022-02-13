@@ -12,7 +12,7 @@ function themingLog(theme, logger, lineSep) {
   }
 
   return function(text /*, ...args */) {
-    var text = applyTheme(parseThemedText(text), theme, arguments);
+    text = applyTheme(parseThemedText(text), theme, arguments);
     if (lineSep) {
       var lines = text.split(/\r\n|\r|\n/);
       for (var i = 0, n = lines.length; i < n; i++) {

@@ -7,7 +7,7 @@ var argTheme = require('../../lib/arg-theme');
 
 describe('lib/arg-theme', function() {
 
-  it('Should check if a theme name is an argument identifier', function() {
+  it('Should check if a theme name is an argument identifier', function(done) {
     expect(argTheme.is('1')).to.equal(true);
     expect(argTheme.is('2')).to.equal(true);
     expect(argTheme.is('10')).to.equal(true);
@@ -18,9 +18,11 @@ describe('lib/arg-theme', function() {
     expect(argTheme.is('1a')).to.equal(false);
     expect(argTheme.is('3.')).to.equal(false);
     expect(argTheme.is('3_')).to.equal(false);
+
+    done();
   });
 
-  it('Should convert an arg identifier to an argument value', function() {
+  it('Should convert an arg identifier to an argument value', function(done) {
     var args = ['Arg0', 'Arg1', 'Arg2', 'Arg3'];
     expect(argTheme.convert(args, '-1', 'X1-')).to.equal('');
     expect(argTheme.convert(args, '0', 'X0')).to.equal('');
@@ -31,6 +33,8 @@ describe('lib/arg-theme', function() {
 
     expect(argTheme.convert(args, '', 'X')).to.equal('');
     expect(argTheme.convert(args, 'a', 'X')).to.equal('');
+
+    done();
   });
 
 });

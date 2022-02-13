@@ -2,29 +2,52 @@
   "name": "theming-log",
   "version": "2.1.1",
   "description": "Creates a logger with theme for text decoration.",
+  "author": "Gulp Team <team@gulpjs.com> (https://gulpjs.com/)",
+  "contributors": [
+    "Takayuki Sato <sttk.xslet@gmail.com>",
+    "Blaine Bublitz <blaine.bublitz@gmail.com>"
+  ],
+  "repository": "gulpjs/theming-log",
+  "license": "MIT",
+  "engines": {
+    "node": ">= 10.13.0"
+  },
   "main": "index.js",
   "files": [
     "index.js",
     "lib/",
-    "web/"
+    "web/",
+    "LICENSE"
   ],
   "scripts": {
     "lint": "eslint .",
-    "test": "mocha test test/lib",
-    "coverage": "nyc --reporter=lcov --reporter=text-summary npm test",
-    "coveralls": "nyc --reporter=text-lcov npm test | coveralls",
+    "pretest": "npm run lint && npm run web:build",
+    "test": "nyc mocha --async-only test test/lib",
     "web:build": "npm run web:build-src && npm run web:build-test",
     "web:build-src": "browserify index.js --standalone themingLog -o web/theming-log.js && cd web && uglifyjs theming-log.js --compress --mangle -o theming-log.min.js --source-map url=theming-log.min.js.map",
-    "web:build-test": "node tool/mktest.js",
-    "chrome:install": "npm i --no-save mocha-chrome",
-    "chrome:test": "mocha-chrome test/web/browser-test.html",
-    "phantom:install": "npm i --no-save phantomjs-prebuilt mocha-phantomjs",
-    "phantom:test": "mocha-phantomjs -p node_modules/.bin/phantomjs test/web/browser-test.html",
-    "build": "npm run lint && npm run coverage && npm run web:build"
+    "web:build-test": "node tool/mktest.js"
   },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/gulpjs/theming-log.git"
+  "devDependencies": {
+    "browserify": "^17.0.0",
+    "chai": "^4.3.6",
+    "eslint": "^7.32.0",
+    "eslint-config-gulp": "^5.0.1",
+    "eslint-plugin-node": "^11.1.0",
+    "mocha": "^8.4.0",
+    "nyc": "^15.1.0",
+    "uglify-js": "^3.15.1"
+  },
+  "dependencies": {
+    "get-value": "^3.0.1"
+  },
+  "nyc": {
+    "reporter": [
+      "lcov",
+      "text-summary"
+    ]
+  },
+  "prettier": {
+    "singleQuote": true
   },
   "keywords": [
     "log",
@@ -32,29 +55,5 @@
     "theme",
     "theming",
     "color"
-  ],
-  "author": "Gulp Team <team@gulpjs.com> (https://gulpjs.com/)",
-  "engines": {
-    "node": ">= 0.10"
-  },
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/gulpjs/theming-log/issues"
-  },
-  "homepage": "https://github.com/gulpjs/theming-log",
-  "devDependencies": {
-    "browserify": "^16.5.2",
-    "chai": "^3.5.0",
-    "coveralls": "^3.1.0",
-    "eslint": "^7.10.0",
-    "mocha": "^3.5.3",
-    "nyc": "^15.1.0",
-    "uglify-js": "^3.11.0"
-  },
-  "dependencies": {
-    "@fav/prop.get-deep": "^1.0.4",
-    "@fav/type.is-function": "^1.0.2",
-    "@fav/type.is-string": "^1.0.2",
-    "@fav/type.to-integer": "^1.0.3"
-  }
+  ]
 }

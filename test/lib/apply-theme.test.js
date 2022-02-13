@@ -32,23 +32,25 @@ var themeSet = {
 
 describe('lib/apply-theme', function() {
 
-  it('Should apply theme to a text', function() {
+  it('Should apply theme to a text', function(done) {
     var parsed = { nodes: [
       { theme: 'ERROR', text: 'This is an error message.' },
     ] };
     expect(apply(parsed, themeSet)).to.equal('E:[This is an error message.]');
+    done();
   });
 
-  it('Should apply theme to multiple texts', function() {
+  it('Should apply theme to multiple texts', function(done) {
     var parsed = { nodes: [
       { theme: 'ERROR', text: 'This is an error message.' },
       { theme: 'WARN', text: 'This is a warning message.' },
     ] };
     expect(apply(parsed, themeSet)).to.equal(
       'E:[This is an error message.]W:[This is a warning message.]');
+    done();
   });
 
-  it('Should apply theme to only themed texts', function() {
+  it('Should apply theme to only themed texts', function(done) {
     var parsed = { nodes: [
       { theme: 'ERROR', text: 'This is an error message.' },
       'This is not themed text.',
@@ -63,9 +65,10 @@ describe('lib/apply-theme', function() {
       'This is not themed text, too.' +
       'W:[This is a warning message.]'
     );
-  } );
+    done();
+  });
 
-  it('Should apply theme to nested themed texts', function() {
+  it('Should apply theme to nested themed texts', function(done) {
     var parsed = { nodes: [
       'aaa ',
       { theme: 'ERROR', nodes: [
@@ -84,9 +87,11 @@ describe('lib/apply-theme', function() {
 
     expect(apply(parsed, themeSet)).to.equal(
       'aaa E:[bbb H:[ccc] ddd W:[eee H:[fff] ggg] hhh] iii');
+
+    done();
   });
 
-  it('Should apply theme of which value is theme name', function() {
+  it('Should apply theme of which value is theme name', function(done) {
     var parsed = { nodes: [
       { theme: 'TypeError', text: 'type error' },
       ' / ',
@@ -99,10 +104,11 @@ describe('lib/apply-theme', function() {
 
     expect(apply(parsed, themeSet)).to.equal(
       'E:[type error] / H:[emphasized E:[type error]].');
+
+    done();
   });
 
-  it('Should apply nothing when specified name is not found in theme',
-  function() {
+  it('Should apply nothing when specified name is not found in theme', function(done) {
     var parsed = { nodes: [
       { theme: 'NoTheme', text: 'no theme' },
       ' / ',
@@ -115,9 +121,11 @@ describe('lib/apply-theme', function() {
 
     expect(apply(parsed, themeSet)).to.equal(
       'no theme / H:[emphasized message].');
+
+    done();
   });
 
-  it('Should end normally when argument is empty', function() {
+  it('Should end normally when argument is empty', function(done) {
     var parsed = { nodes: [] };
     expect(apply(parsed, themeSet)).to.equal('');
 
@@ -135,9 +143,11 @@ describe('lib/apply-theme', function() {
 
     parsed = { nodes: [{ theme: 'ERROR', nodes: [''] }] };
     expect(apply(parsed, themeSet)).to.equal('E:[]');
+
+    done();
   });
 
-  it('Should support theme for arguments', function() {
+  it('Should support theme for arguments', function(done) {
     var parsed = { nodes: [
       'This text has arg-theme: ',
       { theme: '1', text: '', },
@@ -151,9 +161,11 @@ describe('lib/apply-theme', function() {
 
     expect(apply(parsed, themeSet)).to.equal(
       'This text has arg-theme: ,  and ');
+
+    done();
   });
 
-  it('Should support theme defined by nested properties', function() {
+  it('Should support theme defined by nested properties', function(done) {
     var parsed = { nodes: [
       ' - ',
       { theme: 'info.important.title', text: 'NOTICE' },
@@ -163,5 +175,6 @@ describe('lib/apply-theme', function() {
     ] };
     expect(apply(parsed, themeSet, [])).to.equal(
       ' - **NOTICE** !:[This is an important info].');
+    done();
   });
 });
