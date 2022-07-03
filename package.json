@@ -37,9 +37,6 @@
     "nyc": "^15.1.0",
     "uglify-js": "^3.15.1"
   },
-  "dependencies": {
-    "get-value": "^3.0.1"
-  },
   "nyc": {
     "reporter": [
       "lcov",
