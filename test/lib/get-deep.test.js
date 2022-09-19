@@ -1,5 +1,6 @@
-var chai = require('chai');
-var expect = chai.expect;
+'use strict';
+
+var expect = require('expect');
 
 var getDeep = require('../../lib/get-deep');
 
@@ -17,28 +18,28 @@ describe('get-deep', function() {
       }
     };
 
-    expect(getDeep(obj, [])).to.equal(obj);
+    expect(getDeep(obj, [])).toEqual(obj);
 
-    expect(getDeep(obj, ['a00'])).to.equal(obj.a00);
-    expect(getDeep(obj, ['a01'])).to.equal(obj.a01);
-    expect(getDeep(obj, ['a02'])).to.equal(obj.a02);
+    expect(getDeep(obj, ['a00'])).toEqual(obj.a00);
+    expect(getDeep(obj, ['a01'])).toEqual(obj.a01);
+    expect(getDeep(obj, ['a02'])).toEqual(obj.a02);
 
-    expect(getDeep(obj, ['a00', 'a10'])).to.equal(obj.a00.a10);
-    expect(getDeep(obj, ['a00', 'a11'])).to.equal(obj.a00.a11);
-    expect(getDeep(obj, ['a01', 'a10'])).to.equal(obj.a01.a10);
-    expect(getDeep(obj, ['a01', 'a12'])).to.equal(obj.a01.a12);
+    expect(getDeep(obj, ['a00', 'a10'])).toEqual(obj.a00.a10);
+    expect(getDeep(obj, ['a00', 'a11'])).toEqual(obj.a00.a11);
+    expect(getDeep(obj, ['a01', 'a10'])).toEqual(obj.a01.a10);
+    expect(getDeep(obj, ['a01', 'a12'])).toEqual(obj.a01.a12);
 
-    expect(getDeep(obj, ['a00', 'a10', 'a20'])).to.equal(1);
-    expect(getDeep(obj, ['a00', 'a10', 'a21'])).to.equal(2);
-    expect(getDeep(obj, ['a00', 'a10', 'a22'])).to.equal(3);
+    expect(getDeep(obj, ['a00', 'a10', 'a20'])).toEqual(1);
+    expect(getDeep(obj, ['a00', 'a10', 'a21'])).toEqual(2);
+    expect(getDeep(obj, ['a00', 'a10', 'a22'])).toEqual(3);
 
-    expect(getDeep(obj, ['a00', 'a11', 'a20'])).to.equal(4);
-    expect(getDeep(obj, ['a00', 'a11', 'a23'])).to.equal(5);
-    expect(getDeep(obj, ['a00', 'a11', 'a24'])).to.equal(6);
+    expect(getDeep(obj, ['a00', 'a11', 'a20'])).toEqual(4);
+    expect(getDeep(obj, ['a00', 'a11', 'a23'])).toEqual(5);
+    expect(getDeep(obj, ['a00', 'a11', 'a24'])).toEqual(6);
 
-    expect(getDeep(obj, ['a01', 'a10', 'a20'])).to.equal(7);
-    expect(getDeep(obj, ['a01', 'a10', 'a21'])).to.equal(8);
-    expect(getDeep(obj, ['a01', 'a10', 'a22'])).to.equal(9);
+    expect(getDeep(obj, ['a01', 'a10', 'a20'])).toEqual(7);
+    expect(getDeep(obj, ['a01', 'a10', 'a21'])).toEqual(8);
+    expect(getDeep(obj, ['a01', 'a10', 'a22'])).toEqual(9);
 
     done();
   });
@@ -55,9 +56,9 @@ describe('get-deep', function() {
       }
     };
 
-    expect(getDeep(obj, ['a', 'b', 'c'])).to.equal(undefined);
-    expect(getDeep(obj, ['a00', 'b', 'c'])).to.equal(undefined);
-    expect(getDeep(obj, ['a00', 'a10', 'c'])).to.equal(undefined);
+    expect(getDeep(obj, ['a', 'b', 'c'])).toEqual(undefined);
+    expect(getDeep(obj, ['a00', 'b', 'c'])).toEqual(undefined);
+    expect(getDeep(obj, ['a00', 'a10', 'c'])).toEqual(undefined);
 
     done();
   });
@@ -74,67 +75,67 @@ describe('get-deep', function() {
       }
     };
 
-    expect(getDeep(obj, undefined)).to.equal(undefined);
-    expect(getDeep(obj, null)).to.equal(undefined);
-    expect(getDeep(obj, true)).to.equal(undefined);
-    expect(getDeep(obj, false)).to.equal(undefined);
-    expect(getDeep(obj, 0)).to.equal(undefined);
-    expect(getDeep(obj, 10)).to.equal(undefined);
-    expect(getDeep(obj, '')).to.equal(undefined);
-    expect(getDeep(obj, 'a00')).to.equal(undefined);
-    expect(getDeep(obj, { a00: 'a00', })).to.equal(undefined);
+    expect(getDeep(obj, undefined)).toEqual(undefined);
+    expect(getDeep(obj, null)).toEqual(undefined);
+    expect(getDeep(obj, true)).toEqual(undefined);
+    expect(getDeep(obj, false)).toEqual(undefined);
+    expect(getDeep(obj, 0)).toEqual(undefined);
+    expect(getDeep(obj, 10)).toEqual(undefined);
+    expect(getDeep(obj, '')).toEqual(undefined);
+    expect(getDeep(obj, 'a00')).toEqual(undefined);
+    expect(getDeep(obj, { a00: 'a00', })).toEqual(undefined);
 
     if (typeof Symbol === 'function') {
-      expect(getDeep(obj, Symbol('a00'))).to.equal(undefined);
+      expect(getDeep(obj, Symbol('a00'))).toEqual(undefined);
     }
 
     done();
   });
 
   it('Should get obj itself when obj is primitive type and propPath is nullish or empty', function(done) {
-    expect(getDeep(undefined)).to.equal(undefined);
-    expect(getDeep(null)).to.equal(null);
-    expect(getDeep(true)).to.equal(true);
-    expect(getDeep(false)).to.equal(false);
-    expect(getDeep(0)).to.equal(0);
-    expect(getDeep(123)).to.equal(123);
+    expect(getDeep(undefined)).toEqual(undefined);
+    expect(getDeep(null)).toEqual(null);
+    expect(getDeep(true)).toEqual(true);
+    expect(getDeep(false)).toEqual(false);
+    expect(getDeep(0)).toEqual(0);
+    expect(getDeep(123)).toEqual(123);
 
-    expect(getDeep(undefined, [])).to.equal(undefined);
-    expect(getDeep(null, [])).to.equal(null);
-    expect(getDeep(true, [])).to.equal(true);
-    expect(getDeep(false, [])).to.equal(false);
-    expect(getDeep(0, [])).to.equal(0);
-    expect(getDeep(123, [])).to.equal(123);
+    expect(getDeep(undefined, [])).toEqual(undefined);
+    expect(getDeep(null, [])).toEqual(null);
+    expect(getDeep(true, [])).toEqual(true);
+    expect(getDeep(false, [])).toEqual(false);
+    expect(getDeep(0, [])).toEqual(0);
+    expect(getDeep(123, [])).toEqual(123);
 
     done();
   });
 
   it('Should get prop value even when obj is not a object', function(done) {
-    expect(getDeep([1,2,3], ['length'])).to.equal(3);
+    expect(getDeep([1,2,3], ['length'])).toEqual(3);
 
     function fn(b, c) {
       return b + c;
     }
-    expect(getDeep(fn['length'])).to.equal(2);
+    expect(getDeep(fn['length'])).toEqual(2);
 
-    expect(getDeep('ABC'['length'])).to.equal(3);
+    expect(getDeep('ABC'['length'])).toEqual(3);
 
-    expect(getDeep(undefined, ['length'])).to.equal(undefined);
-    expect(getDeep(null, ['length'])).to.equal(undefined);
-    expect(getDeep(true, ['length'])).to.equal(undefined);
-    expect(getDeep(false, ['length'])).to.equal(undefined);
-    expect(getDeep(0, ['length'])).to.equal(undefined);
-    expect(getDeep(123, ['length'])).to.equal(undefined);
+    expect(getDeep(undefined, ['length'])).toEqual(undefined);
+    expect(getDeep(null, ['length'])).toEqual(undefined);
+    expect(getDeep(true, ['length'])).toEqual(undefined);
+    expect(getDeep(false, ['length'])).toEqual(undefined);
+    expect(getDeep(0, ['length'])).toEqual(undefined);
+    expect(getDeep(123, ['length'])).toEqual(undefined);
 
     done();
   });
 
   it('Should get an enumerable property key value', function(done) {
     var obj = { a: { b: { c: 123 } } };
-    expect(getDeep(obj, ['a'])).to.equal(obj.a);
-    expect(getDeep(obj, ['a', 'b'])).to.equal(obj.a.b);
-    expect(getDeep(obj, ['a', 'b', 'c'])).to.equal(obj.a.b.c);
-    expect(getDeep(obj, ['a', 'b', 'c'])).to.equal(123);
+    expect(getDeep(obj, ['a'])).toEqual(obj.a);
+    expect(getDeep(obj, ['a', 'b'])).toEqual(obj.a.b);
+    expect(getDeep(obj, ['a', 'b', 'c'])).toEqual(obj.a.b.c);
+    expect(getDeep(obj, ['a', 'b', 'c'])).toEqual(123);
 
     done();
   });
@@ -145,10 +146,10 @@ describe('get-deep', function() {
     Object.defineProperty(obj.a, 'b', { value: {} });
     Object.defineProperty(obj.a.b, 'c', { value: 123 });
 
-    expect(getDeep(obj, ['a'])).to.equal(obj.a);
-    expect(getDeep(obj, ['a', 'b'])).to.equal(obj.a.b);
-    expect(getDeep(obj, ['a', 'b', 'c'])).to.equal(obj.a.b.c);
-    expect(getDeep(obj, ['a', 'b', 'c'])).to.equal(123);
+    expect(getDeep(obj, ['a'])).toEqual(obj.a);
+    expect(getDeep(obj, ['a', 'b'])).toEqual(obj.a.b);
+    expect(getDeep(obj, ['a', 'b', 'c'])).toEqual(obj.a.b.c);
+    expect(getDeep(obj, ['a', 'b', 'c'])).toEqual(123);
 
     done();
   });
@@ -164,11 +165,11 @@ describe('get-deep', function() {
     Fn1.prototype = obj0;
     var obj = new Fn1();
 
-    expect(obj.a.b.c).to.equal(123);
-    expect(getDeep(obj, ['a'])).to.equal(obj.a);
-    expect(getDeep(obj, ['a', 'b'])).to.equal(obj.a.b);
-    expect(getDeep(obj, ['a', 'b', 'c'])).to.equal(obj.a.b.c);
-    expect(getDeep(obj, ['a', 'b', 'c'])).to.equal(123);
+    expect(obj.a.b.c).toEqual(123);
+    expect(getDeep(obj, ['a'])).toEqual(obj.a);
+    expect(getDeep(obj, ['a', 'b'])).toEqual(obj.a.b);
+    expect(getDeep(obj, ['a', 'b', 'c'])).toEqual(obj.a.b.c);
+    expect(getDeep(obj, ['a', 'b', 'c'])).toEqual(123);
 
     done();
   });
@@ -185,10 +186,10 @@ describe('get-deep', function() {
     obj[a][b] = {};
     obj[a][b][c] = 123;
 
-    expect(getDeep(obj, [a])).to.equal(obj[a]);
-    expect(getDeep(obj, [a, b])).to.equal(obj[a][b]);
-    expect(getDeep(obj, [a, b, c])).to.equal(obj[a][b][c]);
-    expect(getDeep(obj, [a, b, c])).to.equal(123);
+    expect(getDeep(obj, [a])).toEqual(obj[a]);
+    expect(getDeep(obj, [a, b])).toEqual(obj[a][b]);
+    expect(getDeep(obj, [a, b, c])).toEqual(obj[a][b][c]);
+    expect(getDeep(obj, [a, b, c])).toEqual(123);
 
     done();
   });
@@ -205,10 +206,10 @@ describe('get-deep', function() {
     Object.defineProperty(obj[a], b, { value: {} });
     Object.defineProperty(obj[a][b], c, { value: 123 });
 
-    expect(getDeep(obj, [a])).to.equal(obj[a]);
-    expect(getDeep(obj, [a, b])).to.equal(obj[a][b]);
-    expect(getDeep(obj, [a, b, c])).to.equal(obj[a][b][c]);
-    expect(getDeep(obj, [a, b, c])).to.equal(123);
+    expect(getDeep(obj, [a])).toEqual(obj[a]);
+    expect(getDeep(obj, [a, b])).toEqual(obj[a][b]);
+    expect(getDeep(obj, [a, b, c])).toEqual(obj[a][b][c]);
+    expect(getDeep(obj, [a, b, c])).toEqual(123);
 
     done();
   });
@@ -229,11 +230,11 @@ describe('get-deep', function() {
     Fn1.prototype = obj0;
     var obj = new Fn1();
 
-    expect(obj[a][b][c]).to.equal(123);
-    expect(getDeep(obj, [a])).to.equal(obj[a]);
-    expect(getDeep(obj, [a, b])).to.equal(obj[a][b]);
-    expect(getDeep(obj, [a, b, c])).to.equal(obj[a][b][c]);
-    expect(getDeep(obj, [a, b, c])).to.equal(123);
+    expect(obj[a][b][c]).toEqual(123);
+    expect(getDeep(obj, [a])).toEqual(obj[a]);
+    expect(getDeep(obj, [a, b])).toEqual(obj[a][b]);
+    expect(getDeep(obj, [a, b, c])).toEqual(obj[a][b][c]);
+    expect(getDeep(obj, [a, b, c])).toEqual(123);
 
     done();
   });
@@ -250,22 +251,22 @@ describe('get-deep', function() {
     obj[a][b] = {};
     obj[a][b][c] = 3;
 
-    expect(getDeep(obj, [[a], b, c])).to.equal(undefined);
-    expect(getDeep(obj, [a, [b], c])).to.equal(undefined);
-    expect(getDeep(obj, [a, b, [c]])).to.equal(undefined);
+    expect(getDeep(obj, [[a], b, c])).toEqual(undefined);
+    expect(getDeep(obj, [a, [b], c])).toEqual(undefined);
+    expect(getDeep(obj, [a, b, [c]])).toEqual(undefined);
 
     done();
   });
 
   it('Should not allow to use an array as a property', function(done) {
     var obj = { a: 1, b: { c: 2 }, 'd,e': 3 };
-    expect(getDeep(obj, ['a'])).to.equal(1);
-    expect(getDeep(obj, [['a']])).to.equal(undefined);
-    expect(getDeep(obj, ['b', 'c'])).to.equal(2);
-    expect(getDeep(obj, [['b'], 'c'])).to.equal(undefined);
-    expect(getDeep(obj, ['b', ['c']])).to.equal(undefined);
-    expect(getDeep(obj, ['d,e'])).to.equal(3);
-    expect(getDeep(obj, [['d','e']])).to.equal(undefined);
+    expect(getDeep(obj, ['a'])).toEqual(1);
+    expect(getDeep(obj, [['a']])).toEqual(undefined);
+    expect(getDeep(obj, ['b', 'c'])).toEqual(2);
+    expect(getDeep(obj, [['b'], 'c'])).toEqual(undefined);
+    expect(getDeep(obj, ['b', ['c']])).toEqual(undefined);
+    expect(getDeep(obj, ['d,e'])).toEqual(3);
+    expect(getDeep(obj, [['d','e']])).toEqual(undefined);
 
     if (typeof Symbol === 'function') {
       obj = {};
@@ -280,16 +281,16 @@ describe('get-deep', function() {
       obj[b.toString()] = {};
       obj[b.toString()][c] = 22;
       obj[de] = 3;
-      expect(getDeep(obj, [a])).to.equal(1);
-      expect(getDeep(obj, [a.toString()])).to.equal(11);
-      expect(getDeep(obj, [[a]])).to.equal(undefined);
-      expect(getDeep(obj, [b, c])).to.equal(2);
-      expect(getDeep(obj, [b, c.toString()])).to.equal(21);
-      expect(getDeep(obj, [b.toString(), c])).to.equal(22);
-      expect(getDeep(obj, [[b], c])).to.equal(undefined);
-      expect(getDeep(obj, [b, [c]])).to.equal(undefined);
-      expect(getDeep(obj, [de])).to.equal(3);
-      expect(getDeep(obj, [[d,e]])).to.equal(undefined);
+      expect(getDeep(obj, [a])).toEqual(1);
+      expect(getDeep(obj, [a.toString()])).toEqual(11);
+      expect(getDeep(obj, [[a]])).toEqual(undefined);
+      expect(getDeep(obj, [b, c])).toEqual(2);
+      expect(getDeep(obj, [b, c.toString()])).toEqual(21);
+      expect(getDeep(obj, [b.toString(), c])).toEqual(22);
+      expect(getDeep(obj, [[b], c])).toEqual(undefined);
+      expect(getDeep(obj, [b, [c]])).toEqual(undefined);
+      expect(getDeep(obj, [de])).toEqual(3);
+      expect(getDeep(obj, [[d,e]])).toEqual(undefined);
     }
 
     done();

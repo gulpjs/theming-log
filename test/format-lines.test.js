@@ -2,8 +2,7 @@
 
 /* eslint brace-style: off */
 
-var chai = require('chai');
-var expect = chai.expect;
+var expect = require('expect');
 var themingLog = require('..');
 
 var formatLines = themingLog.formatLines;
@@ -17,7 +16,7 @@ describe('formatLines', function() {
 
   it('Format text without eol', function(done) {
     var out = formatLines(theme, '{red: This text contains no eol}');
-    expect(out).to.deep.equal([
+    expect(out).toEqual([
       'RED:[This text contains no eol]',
     ]);
     done();
@@ -30,7 +29,7 @@ describe('formatLines', function() {
       '{red: Notice when themes stride over}\n' +
       '{red: multiple lines.}'
     );
-    expect(out).to.deep.equal([
+    expect(out).toEqual([
       'BLUE:[This text]',
       'BLUE:[contains EOLs.]',
       'RED:[Notice when themes stride over]',

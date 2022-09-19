@@ -1,7 +1,6 @@
 'use strict';
 
-var chai = require('chai');
-var expect = chai.expect;
+var expect = require('expect');
 var apply = require('../../lib/apply-theme');
 
 var themeSet = {
@@ -36,7 +35,7 @@ describe('lib/apply-theme', function() {
     var parsed = { nodes: [
       { theme: 'ERROR', text: 'This is an error message.' },
     ] };
-    expect(apply(parsed, themeSet)).to.equal('E:[This is an error message.]');
+    expect(apply(parsed, themeSet)).toEqual('E:[This is an error message.]');
     done();
   });
 
@@ -45,7 +44,7 @@ describe('lib/apply-theme', function() {
       { theme: 'ERROR', text: 'This is an error message.' },
       { theme: 'WARN', text: 'This is a warning message.' },
     ] };
-    expect(apply(parsed, themeSet)).to.equal(
+    expect(apply(parsed, themeSet)).toEqual(
       'E:[This is an error message.]W:[This is a warning message.]');
     done();
   });
@@ -58,7 +57,7 @@ describe('lib/apply-theme', function() {
       'This is not themed text, too.',
       { theme: 'WARN', text: 'This is a warning message.' },
     ] };
-    expect(apply(parsed, themeSet)).to.equal(
+    expect(apply(parsed, themeSet)).toEqual(
       'E:[This is an error message.]' +
       'This is not themed text.' +
       'E:[This is an error message, too.]' +
@@ -85,7 +84,7 @@ describe('lib/apply-theme', function() {
       ' iii',
     ] };
 
-    expect(apply(parsed, themeSet)).to.equal(
+    expect(apply(parsed, themeSet)).toEqual(
       'aaa E:[bbb H:[ccc] ddd W:[eee H:[fff] ggg] hhh] iii');
 
     done();
@@ -102,7 +101,7 @@ describe('lib/apply-theme', function() {
       '.',
     ] };
 
-    expect(apply(parsed, themeSet)).to.equal(
+    expect(apply(parsed, themeSet)).toEqual(
       'E:[type error] / H:[emphasized E:[type error]].');
 
     done();
@@ -119,7 +118,7 @@ describe('lib/apply-theme', function() {
       '.',
     ] };
 
-    expect(apply(parsed, themeSet)).to.equal(
+    expect(apply(parsed, themeSet)).toEqual(
       'no theme / H:[emphasized message].');
 
     done();
@@ -127,22 +126,22 @@ describe('lib/apply-theme', function() {
 
   it('Should end normally when argument is empty', function(done) {
     var parsed = { nodes: [] };
-    expect(apply(parsed, themeSet)).to.equal('');
+    expect(apply(parsed, themeSet)).toEqual('');
 
     parsed = { nodes: [''] };
-    expect(apply(parsed, themeSet)).to.equal('');
+    expect(apply(parsed, themeSet)).toEqual('');
 
     parsed = { nodes: ['', ''] };
-    expect(apply(parsed, themeSet)).to.equal('');
+    expect(apply(parsed, themeSet)).toEqual('');
 
     parsed = { nodes: [{ theme: 'ERROR', text: '' }] };
-    expect(apply(parsed, themeSet)).to.equal('E:[]');
+    expect(apply(parsed, themeSet)).toEqual('E:[]');
 
     parsed = { nodes: [{ theme: 'ERROR', nodes: [] }] };
-    expect(apply(parsed, themeSet)).to.equal('E:[]');
+    expect(apply(parsed, themeSet)).toEqual('E:[]');
 
     parsed = { nodes: [{ theme: 'ERROR', nodes: [''] }] };
-    expect(apply(parsed, themeSet)).to.equal('E:[]');
+    expect(apply(parsed, themeSet)).toEqual('E:[]');
 
     done();
   });
@@ -156,10 +155,10 @@ describe('lib/apply-theme', function() {
       ' and ',
       { theme: '2', text: 'Two' },
     ] };
-    expect(apply(parsed, themeSet, ['-', 'A1', 222, true])).to.equal(
+    expect(apply(parsed, themeSet, ['-', 'A1', 222, true])).toEqual(
       'This text has arg-theme: A1, true and 222');
 
-    expect(apply(parsed, themeSet)).to.equal(
+    expect(apply(parsed, themeSet)).toEqual(
       'This text has arg-theme: ,  and ');
 
     done();
@@ -173,7 +172,7 @@ describe('lib/apply-theme', function() {
       { theme: 'info.important.message', text: 'This is an important info' },
       '.',
     ] };
-    expect(apply(parsed, themeSet, [])).to.equal(
+    expect(apply(parsed, themeSet, [])).toEqual(
       ' - **NOTICE** !:[This is an important info].');
     done();
   });
