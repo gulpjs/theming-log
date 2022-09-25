@@ -295,4 +295,16 @@ describe('get-deep', function() {
 
     done();
   });
+
+  it('should avoid prototype pollution', function(done) {
+    var obj = { a: 1 };
+    expect(obj.a).toEqual(1);
+    expect(obj.__proto__).not.toBeUndefined();
+    expect(obj.constructor).not.toBeUndefined();
+
+    expect(getDeep(obj, ['a'])).toEqual(1);
+    expect(getDeep(obj, ['__proto__'])).toBeUndefined();
+    expect(getDeep(obj, ['constructor'])).toBeUndefined();
+    done();
+  });
 });
