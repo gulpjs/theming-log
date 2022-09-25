@@ -56,9 +56,9 @@ describe('get-deep', function() {
       }
     };
 
-    expect(getDeep(obj, ['a', 'b', 'c'])).toEqual(undefined);
-    expect(getDeep(obj, ['a00', 'b', 'c'])).toEqual(undefined);
-    expect(getDeep(obj, ['a00', 'a10', 'c'])).toEqual(undefined);
+    expect(getDeep(obj, ['a', 'b', 'c'])).toBeUndefined();
+    expect(getDeep(obj, ['a00', 'b', 'c'])).toBeUndefined();
+    expect(getDeep(obj, ['a00', 'a10', 'c'])).toBeUndefined();
 
     done();
   });
@@ -75,33 +75,33 @@ describe('get-deep', function() {
       }
     };
 
-    expect(getDeep(obj, undefined)).toEqual(undefined);
-    expect(getDeep(obj, null)).toEqual(undefined);
-    expect(getDeep(obj, true)).toEqual(undefined);
-    expect(getDeep(obj, false)).toEqual(undefined);
-    expect(getDeep(obj, 0)).toEqual(undefined);
-    expect(getDeep(obj, 10)).toEqual(undefined);
-    expect(getDeep(obj, '')).toEqual(undefined);
-    expect(getDeep(obj, 'a00')).toEqual(undefined);
-    expect(getDeep(obj, { a00: 'a00', })).toEqual(undefined);
+    expect(getDeep(obj, undefined)).toBeUndefined();
+    expect(getDeep(obj, null)).toBeUndefined();
+    expect(getDeep(obj, true)).toBeUndefined();
+    expect(getDeep(obj, false)).toBeUndefined();
+    expect(getDeep(obj, 0)).toBeUndefined();
+    expect(getDeep(obj, 10)).toBeUndefined();
+    expect(getDeep(obj, '')).toBeUndefined();
+    expect(getDeep(obj, 'a00')).toBeUndefined();
+    expect(getDeep(obj, { a00: 'a00', })).toBeUndefined();
 
     if (typeof Symbol === 'function') {
-      expect(getDeep(obj, Symbol('a00'))).toEqual(undefined);
+      expect(getDeep(obj, Symbol('a00'))).toBeUndefined();
     }
 
     done();
   });
 
   it('Should get obj itself when obj is primitive type and propPath is nullish or empty', function(done) {
-    expect(getDeep(undefined)).toEqual(undefined);
-    expect(getDeep(null)).toEqual(null);
+    expect(getDeep(undefined)).toBeUndefined();
+    expect(getDeep(null)).toBeNull();
     expect(getDeep(true)).toEqual(true);
     expect(getDeep(false)).toEqual(false);
     expect(getDeep(0)).toEqual(0);
     expect(getDeep(123)).toEqual(123);
 
-    expect(getDeep(undefined, [])).toEqual(undefined);
-    expect(getDeep(null, [])).toEqual(null);
+    expect(getDeep(undefined, [])).toBeUndefined();
+    expect(getDeep(null, [])).toBeNull();
     expect(getDeep(true, [])).toEqual(true);
     expect(getDeep(false, [])).toEqual(false);
     expect(getDeep(0, [])).toEqual(0);
@@ -120,12 +120,12 @@ describe('get-deep', function() {
 
     expect(getDeep('ABC'['length'])).toEqual(3);
 
-    expect(getDeep(undefined, ['length'])).toEqual(undefined);
-    expect(getDeep(null, ['length'])).toEqual(undefined);
-    expect(getDeep(true, ['length'])).toEqual(undefined);
-    expect(getDeep(false, ['length'])).toEqual(undefined);
-    expect(getDeep(0, ['length'])).toEqual(undefined);
-    expect(getDeep(123, ['length'])).toEqual(undefined);
+    expect(getDeep(undefined, ['length'])).toBeUndefined();
+    expect(getDeep(null, ['length'])).toBeUndefined();
+    expect(getDeep(true, ['length'])).toBeUndefined();
+    expect(getDeep(false, ['length'])).toBeUndefined();
+    expect(getDeep(0, ['length'])).toBeUndefined();
+    expect(getDeep(123, ['length'])).toBeUndefined();
 
     done();
   });
@@ -251,9 +251,9 @@ describe('get-deep', function() {
     obj[a][b] = {};
     obj[a][b][c] = 3;
 
-    expect(getDeep(obj, [[a], b, c])).toEqual(undefined);
-    expect(getDeep(obj, [a, [b], c])).toEqual(undefined);
-    expect(getDeep(obj, [a, b, [c]])).toEqual(undefined);
+    expect(getDeep(obj, [[a], b, c])).toBeUndefined();
+    expect(getDeep(obj, [a, [b], c])).toBeUndefined();
+    expect(getDeep(obj, [a, b, [c]])).toBeUndefined();
 
     done();
   });
@@ -261,12 +261,12 @@ describe('get-deep', function() {
   it('Should not allow to use an array as a property', function(done) {
     var obj = { a: 1, b: { c: 2 }, 'd,e': 3 };
     expect(getDeep(obj, ['a'])).toEqual(1);
-    expect(getDeep(obj, [['a']])).toEqual(undefined);
+    expect(getDeep(obj, [['a']])).toBeUndefined();
     expect(getDeep(obj, ['b', 'c'])).toEqual(2);
-    expect(getDeep(obj, [['b'], 'c'])).toEqual(undefined);
-    expect(getDeep(obj, ['b', ['c']])).toEqual(undefined);
+    expect(getDeep(obj, [['b'], 'c'])).toBeUndefined();
+    expect(getDeep(obj, ['b', ['c']])).toBeUndefined();
     expect(getDeep(obj, ['d,e'])).toEqual(3);
-    expect(getDeep(obj, [['d','e']])).toEqual(undefined);
+    expect(getDeep(obj, [['d','e']])).toBeUndefined();
 
     if (typeof Symbol === 'function') {
       obj = {};
@@ -283,14 +283,14 @@ describe('get-deep', function() {
       obj[de] = 3;
       expect(getDeep(obj, [a])).toEqual(1);
       expect(getDeep(obj, [a.toString()])).toEqual(11);
-      expect(getDeep(obj, [[a]])).toEqual(undefined);
+      expect(getDeep(obj, [[a]])).toBeUndefined();
       expect(getDeep(obj, [b, c])).toEqual(2);
       expect(getDeep(obj, [b, c.toString()])).toEqual(21);
       expect(getDeep(obj, [b.toString(), c])).toEqual(22);
-      expect(getDeep(obj, [[b], c])).toEqual(undefined);
-      expect(getDeep(obj, [b, [c]])).toEqual(undefined);
+      expect(getDeep(obj, [[b], c])).toBeUndefined();
+      expect(getDeep(obj, [b, [c]])).toBeUndefined();
       expect(getDeep(obj, [de])).toEqual(3);
-      expect(getDeep(obj, [[d,e]])).toEqual(undefined);
+      expect(getDeep(obj, [[d,e]])).toBeUndefined();
     }
 
     done();
