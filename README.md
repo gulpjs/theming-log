@@ -1,4 +1,4 @@
-<p align="center">                                                              
+<p align="center">
   <a href="http://gulpjs.com">
     <img height="257" width="114" src="https://raw.githubusercontent.com/gulpjs/artwork/master/gulp-2x.png">
   </a>
@@ -10,17 +10,7 @@
 
 Creates a logger with theme for text decorations.
 
-## Install
-
-To install from npm:
-
-```sh
-$ npm install --save theming-log
-```
-
 ## Usage
-
-For Node.js:
 
 ```js
 const themingLog = require('theming-log');
@@ -48,39 +38,9 @@ var str = themingLog.format(
 // str === '😢 This is \u001b[31man error message: E001\u001b[39m.'
 ```
 
-For Web browsers:
-
-```html
-<script src="theming-log.min.js"></script>
-<script>
-  function setMessage(msg) {
-    document.getElementById('divMessage').innerHTML += msg + '<br/>';
-  }
-
-  const theme = {
-    ERROR: '{red: {1}}',
-    red: (msg) => '<span style="color:red">' + msg + '</span>',
-    Cry: () => String.fromCodePoint(0x1f622),
-  };
-
-  const log = themingLog(theme, setMessage);
-
-  window.addEventListener('load', () => {
-    log('{Cry} This is {ERROR: an error message: {1: error code} }.', 'E001');
-    // => '😢 This is <span style="color:red">an error message: E001</span>.'
-
-    var str = themingLog.format(
-      '{Cry} This is {ERROR: an error message: {1: error code} }.',
-      'E001'
-    );
-    // str === '😢 This is <span style="color:red">an error message: E001</span>.'
-  });
-</script>
-```
-
 ## API
 
-### <u>themingLog(theme [, logger] [, lineSep]) : function</u>
+### themingLog(theme [, logger] [, lineSep]) : function
 
 Creates a logging function based on `console.log` or a specified logging function. This created logging function converts a template text which contains style blocks (for example, `'{MSG: a message.}'`) to a decorated text.
 
@@ -109,10 +69,8 @@ The API of a returned function is as follows:
 
   | Parameters |  Type  | Description                                               |
   | :--------- | :----: | :-------------------------------------------------------- |
-  | _template_ | string | A template text (explained [above](#template))            |
-  | _args_     | _any_  | Style blocks for arguments (explained [above](#argument)) |
-
-<a name="template"></a>
+  | _template_ | string | A template text (explained [above][template])             |
+  | _args_     | _any_  | Style blocks for arguments (explained [above][arguments]) |
 
 #### Format of a template text
 
@@ -132,7 +90,7 @@ Also, this mark can escape `{` and `}`.
 - `'{ xxx: \\ yyy\\ }'` → theme name is `'xxx'` and block content is `' yyy '`.
 - `'\\{ xxx: yyy \\}'` → a text `'{ xxx: yyy }'`, not a style block.
 
-**_NOTICE:_** _Both a function created by <b>themingLog</b> and <b>themingLog.format</b> use `\` as an escape mark, therefore `\` in a template text are erased.
+**_NOTICE:_** _Both a function created by **themingLog** and **themingLog.format** use `\` as an escape mark, therefore `\` in a template text are erased.
 So you need to take care of `\` marks, especially path separators on Windows._
 
 ```js
@@ -168,8 +126,6 @@ log('{1}', format({}, '{1}', 'C:\\abc\\def\\ghi'));
 // => log('{1]", 'C:\\abc\\def\\ghi') => C:\abc\def\ghi
 ```
 
-<a name="argument"></a>
-
 ##### Style block for argument
 
 A logging function can take multiple arguments.
@@ -178,7 +134,7 @@ A style block to be converted to an argument is same format with a normal style 
 - `{ 1 }` → replaced with the second argument (the first argument except the template text) of logging function, or an empty string if the second argument is not given.
 - `{ 3 : yyyy }` → replaced with the fourth argument (the third argument except the template text) of logging function, or an empty string if the fourth argument is not given. (`'yyyy'` is never used.)
 
-### <u>themingLog.format(theme, template [, ...args]) : string</u>
+### themingLog.format(theme, template [, ...args]) : string
 
 Parses _template_ text and converts it to a decorated string with _theme_ and _args_.
 
@@ -187,14 +143,14 @@ Parses _template_ text and converts it to a decorated string with _theme_ and _a
 | Parameter  |  Type  | Description                                                                           |
 | :--------- | :----: | :------------------------------------------------------------------------------------ |
 | _theme_    | object | An object which is a map of style names and either style functions or template texts. |
-| _template_ | string | A template text (explained [above](#template))                                        |
-| _args_     | _any_  | Style blocks for arguments (explained [above](#argument))                             |
+| _template_ | string | A template text (explained [above][template])                                         |
+| _args_     | _any_  | Style blocks for arguments (explained [above][arguments])                             |
 
 **Returns:**
 
 A converted string.
 
-### <u>themingLog.formatLines(theme, template [, ...args]) : Array</u>
+### themingLog.formatLines(theme, template [, ...args]) : Array
 
 Parses _template_ text, converts it to a decorated string with _theme_ and _args_, and splits the decorated string to multiple lines with newline codes.
 
@@ -203,8 +159,8 @@ Parses _template_ text, converts it to a decorated string with _theme_ and _args
 | Parameter  |  Type  | Description                                                                           |
 | :--------- | :----: | :------------------------------------------------------------------------------------ |
 | _theme_    | object | An object which is a map of style names and either style functions or template texts. |
-| _template_ | string | A template text (explained [above](#template))                                        |
-| _args_     | _any_  | Style blocks for arguments (explained [above](#argument))                             |
+| _template_ | string | A template text (explained [above][template])                                         |
+| _args_     | _any_  | Style blocks for arguments (explained [above][arguments])                             |
 
 **Returns:**
 
@@ -224,4 +180,9 @@ MIT
 
 [coveralls-url]: https://coveralls.io/r/gulpjs/theming-log
 [coveralls-image]: https://img.shields.io/coveralls/gulpjs/theminglog/master.svg?style=flat-square
+<!-- prettier-ignore-end -->
+
+<!-- prettier-ignore-start -->
+[template]: #format-of-a-template-text
+[arguments]: #style-block-for-argument
 <!-- prettier-ignore-end -->
