@@ -11,7 +11,7 @@ function themingLog(theme, logger, lineSep) {
     logger = console.log;
   }
 
-  return function(text /*, ...args */) {
+  return function (text /*, ...args */) {
     text = applyTheme(parseThemedText(text), theme, arguments);
     if (lineSep) {
       var lines = text.split(/\r\n|\r|\n/);

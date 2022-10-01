@@ -4,15 +4,14 @@ var expect = require('expect');
 
 var trim = require('../../lib/trim-unescaped-spaces');
 
-describe('lib/trim-unescaped-spaces', function() {
-
-  it('Should not trim when both sides are not spaces', function(done) {
+describe('lib/trim-unescaped-spaces', function () {
+  it('Should not trim when both sides are not spaces', function (done) {
     expect(trim('')).toEqual('');
     expect(trim('abc')).toEqual('abc');
     done();
   });
 
-  it('Should trim spaces on both sides', function(done) {
+  it('Should trim spaces on both sides', function (done) {
     expect(trim(' ')).toEqual('');
     expect(trim(' abc ')).toEqual('abc');
     expect(trim('   abc')).toEqual('abc');
@@ -21,7 +20,7 @@ describe('lib/trim-unescaped-spaces', function() {
     done();
   });
 
-  it('Should not trim a escaped space on left side', function(done) {
+  it('Should not trim a escaped space on left side', function (done) {
     expect(trim('  \\  abc  ')).toEqual('  abc');
     expect(trim('\\  abc  ')).toEqual('  abc');
     expect(trim(' \\\t  abc  ')).toEqual('\t  abc');
@@ -29,14 +28,14 @@ describe('lib/trim-unescaped-spaces', function() {
     done();
   });
 
-  it('Should not trim a escaped space on right side', function(done) {
+  it('Should not trim a escaped space on right side', function (done) {
     expect(trim('  abc \\   ')).toEqual('abc  ');
     expect(trim('  abc \\ ')).toEqual('abc  ');
     expect(trim('  abc \\')).toEqual('abc \\');
     done();
   });
 
-  it('Should not trim a escaped space on both sides', function(done) {
+  it('Should not trim a escaped space on both sides', function (done) {
     expect(trim(' \\ \\ ')).toEqual('  ');
     expect(trim(' \\ abc  \\ ')).toEqual(' abc   ');
     done();

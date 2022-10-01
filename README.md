@@ -29,11 +29,11 @@ const ansiColors = require('ansi-colors'); // Use ansi-colors for coloring in th
 const emojiCry = String.fromCodePoint(0x1f622);
 
 const theme = {
-  ERROR: '{red: {1}}',  
+  ERROR: '{red: {1}}',
   red: ansiColors.red,
   emoji: {
     Cry: () => emojiCry,
-  }
+  },
 };
 
 const log = themingLog(theme);
@@ -41,7 +41,10 @@ const log = themingLog(theme);
 log('{emoji.Cry} This is {ERROR: an error message: {1: error code} }.', 'E001');
 // => '😢 This is \u001b[31man error message: E001\u001b[39m.'
 
-var str = themingLog.format('{emoji.Cry} This is {ERROR: an error message: {1: error code} }.', 'E001');
+var str = themingLog.format(
+  '{emoji.Cry} This is {ERROR: an error message: {1: error code} }.',
+  'E001'
+);
 // str === '😢 This is \u001b[31man error message: E001\u001b[39m.'
 ```
 
@@ -50,28 +53,30 @@ For Web browsers:
 ```html
 <script src="theming-log.min.js"></script>
 <script>
-function setMessage(msg) {
-  document.getElementById('divMessage').innerHTML += msg + '<br/>';
-}
+  function setMessage(msg) {
+    document.getElementById('divMessage').innerHTML += msg + '<br/>';
+  }
 
-const theme = {
-  ERROR: '{red: {1}}',
-  red: msg => '<span style="color:red">' + msg + '</span>',
-  Cry: () => String.fromCodePoint(0x1f622),
-};
+  const theme = {
+    ERROR: '{red: {1}}',
+    red: (msg) => '<span style="color:red">' + msg + '</span>',
+    Cry: () => String.fromCodePoint(0x1f622),
+  };
 
-const log = themingLog(theme, setMessage);
+  const log = themingLog(theme, setMessage);
 
-window.addEventListener('load', () => {
-  log('{Cry} This is {ERROR: an error message: {1: error code} }.', 'E001');
-  // => '😢 This is <span style="color:red">an error message: E001</span>.'
+  window.addEventListener('load', () => {
+    log('{Cry} This is {ERROR: an error message: {1: error code} }.', 'E001');
+    // => '😢 This is <span style="color:red">an error message: E001</span>.'
 
-  var str = themingLog.format('{Cry} This is {ERROR: an error message: {1: error code} }.', 'E001');
-  // str === '😢 This is <span style="color:red">an error message: E001</span>.'
-});
+    var str = themingLog.format(
+      '{Cry} This is {ERROR: an error message: {1: error code} }.',
+      'E001'
+    );
+    // str === '😢 This is <span style="color:red">an error message: E001</span>.'
+  });
 </script>
 ```
-
 
 ## API
 
@@ -79,20 +84,20 @@ window.addEventListener('load', () => {
 
 Creates a logging function based on `console.log` or a specified logging function. This created logging function converts a template text which contains style blocks (for example, `'{MSG: a message.}'`) to a decorated text.
 
-The *theme* is an plain object which maps pairs of a style name (`'MSG'` in the above example) and either a style function or a template text.
+The _theme_ is an plain object which maps pairs of a style name (`'MSG'` in the above example) and either a style function or a template text.
 A style function receives a block content (`'a message'` in the above example) and returns a converted text.
 If a block content is a template text, it is parsed and converted with theme equally.
 
-If the 2nd or 3rd argument is boolean, it is set to *lineSep*.
-If *lineSep* is true, the created logging function split a converted text into multiple lines with newline codes and output them line by line.
+If the 2nd or 3rd argument is boolean, it is set to _lineSep_.
+If _lineSep_ is true, the created logging function split a converted text into multiple lines with newline codes and output them line by line.
 
 **Parameters:**
 
-| Parameter   |   Type   | Description                                            |
-|:------------|:--------:|:-------------------------------------------------------|
-| *theme*     | object   | An object which is a map of style names and either style functions or template texts. |
-| *logger*    | function | A logging function which is based on by a created logging function. (Optional, and `console.log` in default.) |
-| *lineSep*   | boolean  | If true, A logging function split a converted text into multiple lines with newline codes and output them line by line. |
+| Parameter |   Type   | Description                                                                                                             |
+| :-------- | :------: | :---------------------------------------------------------------------------------------------------------------------- |
+| _theme_   |  object  | An object which is a map of style names and either style functions or template texts.                                   |
+| _logger_  | function | A logging function which is based on by a created logging function. (Optional, and `console.log` in default.)           |
+| _lineSep_ | boolean  | If true, A logging function split a converted text into multiple lines with newline codes and output them line by line. |
 
 **Returns:**
 
@@ -100,36 +105,35 @@ A logging function with theme for text decorations.
 
 The API of a returned function is as follows:
 
-* ***log*** **(template [, ...args]) : Void**
+- **_log_** **(template [, ...args]) : Void**
 
-    | Parameters |  Type  | Description                        |
-    |:-----------|:------:|:-----------------------------------|
-    | *template* | string | A template text (explained [above](#template)) |
-    | *args*     | *any*  | Style blocks for arguments (explained [above](#argument)) |
+  | Parameters |  Type  | Description                                               |
+  | :--------- | :----: | :-------------------------------------------------------- |
+  | _template_ | string | A template text (explained [above](#template))            |
+  | _args_     | _any_  | Style blocks for arguments (explained [above](#argument)) |
 
 <a name="template"></a>
 
-#### Format of a template text  
+#### Format of a template text
 
 A template text can contain style blocks in itself.
 A style block is rounded by `{` and `}`, and this can has a pair of a style name and a block content which are separated by a colon `:`.
 If there is no colon in a style block, the whole text in the block is operated as a style name.
 
-* `'{ xxxx: yyyy }'` → the style name is `'xxxx'` and the block content is `'yyyy'`.
-* `'{ xxxx }'` → the style name is `'xxxx'` and the block content is `''`.
-* `'{ xxxx : }'` → the style name is `'xxxx'` and the block content is `''`.
-* `'{ : yyyy }'` → `'yyyy'` is operated as a text, not a block content.
+- `'{ xxxx: yyyy }'` → the style name is `'xxxx'` and the block content is `'yyyy'`.
+- `'{ xxxx }'` → the style name is `'xxxx'` and the block content is `''`.
+- `'{ xxxx : }'` → the style name is `'xxxx'` and the block content is `''`.
+- `'{ : yyyy }'` → `'yyyy'` is operated as a text, not a block content.
 
 Texts in a style block, both a style name and a block content, are trimmed white spaces on both sides.
 Regarding a block content, the escape mark `\` can prevent trimming.
 Also, this mark can escape `{` and `}`.
 
-* `'{ xxx: \\ yyy\\  }'` → theme name is `'xxx'` and block content is `' yyy '`.
-* `'\\{ xxx: yyy \\}'` → a text `'{ xxx: yyy }'`, not a style block.
+- `'{ xxx: \\ yyy\\ }'` → theme name is `'xxx'` and block content is `' yyy '`.
+- `'\\{ xxx: yyy \\}'` → a text `'{ xxx: yyy }'`, not a style block.
 
-
-***NOTICE:*** *Both a function created by <b>themingLog</b> and <b>themingLog.format</b> use `\` as an escape mark, therefore `\` in a template text are erased.
-So you need to take care of `\` marks, especially path separators on Windows.*
+**_NOTICE:_** _Both a function created by <b>themingLog</b> and <b>themingLog.format</b> use `\` as an escape mark, therefore `\` in a template text are erased.
+So you need to take care of `\` marks, especially path separators on Windows._
 
 ```js
 var log = themingLog({}, console.log);
@@ -143,7 +147,6 @@ log('C:\\\\abc\\\\def\\\\ghi');
 log('{1}', 'C:\\abc\\def\\ghi');
 // => console.log('C:\\abc\\def\\ghi') => C:\abc\def\ghi
 
-
 // Erases '\\' as a escape mark.
 console.log(format({}, 'C:\\\\abc\\\\def\\\\ghi'));
 // => console.log('C:\\abc\\def\\ghi') => C:\abc\def\ghi
@@ -151,7 +154,6 @@ console.log(format({}, 'C:\\\\abc\\\\def\\\\ghi'));
 // Not erases '\\' in arguments.
 console.log(format({}, '{1}', 'C:\\abc\\def\\ghi'));
 // => console.log('C:\\abc\\def\\ghi') => C:\abc\def\ghi
-
 
 // format() and next log() erase double '\\' as escape marks
 log(format({}, 'C:\\\\\\\\abc\\\\\\\\def\\\\\\\\ghi'));
@@ -173,48 +175,44 @@ log('{1}', format({}, '{1}', 'C:\\abc\\def\\ghi'));
 A logging function can take multiple arguments.
 A style block to be converted to an argument is same format with a normal style block but its style name is a number starting from 1, which indicates the index of the argument, like `{2}` or `{2: Explanatory text }`. A block content in a style block for an argument is never used, so it can be used as an explanatory text.
 
-* `{ 1 }` → replaced with the second argument (the first argument except the template text) of logging function, or an empty string if the second argument is not given.
-* `{ 3 : yyyy }` → replaced with the fourth argument (the third argument except the template text) of logging function, or an empty string if the fourth argument is not given. (`'yyyy'` is never used.)
-
+- `{ 1 }` → replaced with the second argument (the first argument except the template text) of logging function, or an empty string if the second argument is not given.
+- `{ 3 : yyyy }` → replaced with the fourth argument (the third argument except the template text) of logging function, or an empty string if the fourth argument is not given. (`'yyyy'` is never used.)
 
 ### <u>themingLog.format(theme, template [, ...args]) : string</u>
 
-Parses *template* text and converts it to a decorated string with *theme* and *args*. 
+Parses _template_ text and converts it to a decorated string with _theme_ and _args_.
 
 **Parameters:**
 
-| Parameter   |   Type   | Description                                            |
-|:------------|:--------:|:-------------------------------------------------------|
-| *theme*     | object   | An object which is a map of style names and either style functions or template texts. |
-| *template*  | string   | A template text (explained [above](#template)) |
-| *args*      | *any*    | Style blocks for arguments (explained [above](#argument)) |
+| Parameter  |  Type  | Description                                                                           |
+| :--------- | :----: | :------------------------------------------------------------------------------------ |
+| _theme_    | object | An object which is a map of style names and either style functions or template texts. |
+| _template_ | string | A template text (explained [above](#template))                                        |
+| _args_     | _any_  | Style blocks for arguments (explained [above](#argument))                             |
 
 **Returns:**
 
 A converted string.
 
-
 ### <u>themingLog.formatLines(theme, template [, ...args]) : Array</u>
 
-Parses *template* text, converts it to a decorated string with *theme* and *args*, and splits the decorated string to multiple lines with newline codes. 
+Parses _template_ text, converts it to a decorated string with _theme_ and _args_, and splits the decorated string to multiple lines with newline codes.
 
 **Parameters:**
 
-| Parameter   |   Type   | Description                                            |
-|:------------|:--------:|:-------------------------------------------------------|
-| *theme*     | object   | An object which is a map of style names and either style functions or template texts. |
-| *template*  | string   | A template text (explained [above](#template)) |
-| *args*      | *any*    | Style blocks for arguments (explained [above](#argument)) |
+| Parameter  |  Type  | Description                                                                           |
+| :--------- | :----: | :------------------------------------------------------------------------------------ |
+| _theme_    | object | An object which is a map of style names and either style functions or template texts. |
+| _template_ | string | A template text (explained [above](#template))                                        |
+| _args_     | _any_  | Style blocks for arguments (explained [above](#argument))                             |
 
 **Returns:**
 
 An array of converted string splitted by newline codes.
 
-
 ## License
 
 MIT
-
 
 <!-- prettier-ignore-start -->
 [downloads-image]: https://img.shields.io/npm/dm/theming-log.svg?style=flat-square
