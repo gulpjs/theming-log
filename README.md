@@ -179,7 +179,7 @@ MIT
 [ci-image]: https://img.shields.io/github/workflow/status/gulpjs/theming-log/dev?style=flat-square
 
 [coveralls-url]: https://coveralls.io/r/gulpjs/theming-log
-[coveralls-image]: https://img.shields.io/coveralls/gulpjs/theminglog/master.svg?style=flat-square
+[coveralls-image]: https://img.shields.io/coveralls/gulpjs/theming-log/master.svg?style=flat-square
 <!-- prettier-ignore-end -->
 
 <!-- prettier-ignore-start -->
