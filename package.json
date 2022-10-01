@@ -16,13 +16,12 @@
   "files": [
     "index.js",
     "lib/",
-    "web/",
     "LICENSE"
   ],
   "scripts": {
     "lint": "eslint .",
     "pretest": "npm run lint",
-    "test": "nyc mocha --async-only test test/lib"
+    "test": "nyc mocha --async-only --recursive test"
   },
   "devDependencies": {
     "eslint": "^7.32.0",
@@ -30,8 +29,7 @@
     "eslint-plugin-node": "^11.1.0",
     "expect": "^27.4.2",
     "mocha": "^8.4.0",
-    "nyc": "^15.1.0",
-    "uglify-js": "^3.15.1"
+    "nyc": "^15.1.0"
   },
   "nyc": {
     "reporter": [
