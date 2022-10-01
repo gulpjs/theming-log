@@ -301,10 +301,17 @@ describe('get-deep', function() {
     expect(obj.a).toEqual(1);
     expect(obj.__proto__).not.toBeUndefined();
     expect(obj.constructor).not.toBeUndefined();
+    expect(obj.__defineGetter__).not.toBeUndefined();
+    expect(obj.__defineSetter__).not.toBeUndefined();
+    expect(obj.__lookupGetter__).not.toBeUndefined();
+    expect(obj.__lookupSetter__).not.toBeUndefined();
 
     expect(getDeep(obj, ['a'])).toEqual(1);
     expect(getDeep(obj, ['__proto__'])).toBeUndefined();
-    expect(getDeep(obj, ['constructor'])).toBeUndefined();
+    expect(getDeep(obj, ['__defineGetter__'])).toBeUndefined();
+    expect(getDeep(obj, ['__defineSetter__'])).toBeUndefined();
+    expect(getDeep(obj, ['__lookupGetter__'])).toBeUndefined();
+    expect(getDeep(obj, ['__lookupGetter__'])).toBeUndefined();
     done();
   });
 });
