@@ -2,8 +2,7 @@
 
 /* eslint brace-style: off */
 
-var chai = require('chai');
-var expect = chai.expect;
+var expect = require('expect');
 var themingLog = require('..');
 
 var format = themingLog.format;
@@ -29,22 +28,25 @@ describe('format', function() {
       AppError: function(v) { return 'Magenta:[' + v + ']'; },
     };
 
-    it('Should format no themed text', function() {
+    it('Should format no themed text', function(done) {
       var out = format(themes, 'This text contains no theme');
-      expect(out).to.equal('This text contains no theme');
+      expect(out).toEqual('This text contains no theme');
+      done();
     });
 
-    it('Should format text using theme', function() {
+    it('Should format text using theme', function(done) {
       var out = format(themes,
         'This {bold: text} contains {red: themed { italic : message }}.');
-      expect(out).to.equal('This Bold:[text] contains Red:[themed ' +
+      expect(out).toEqual('This Bold:[text] contains Red:[themed ' +
         'Italic:[message]].');
+      done();
     });
 
-    it('Should replace arg-themes to argument values', function() {
+    it('Should replace arg-themes to argument values', function(done) {
       var out = format(themes,
         'This text has arg-theme: {2} and {1: One}', 'Arg1', 'Arg2');
-      expect(out).to.equal('This text has arg-theme: Arg2 and Arg1');
+      expect(out).toEqual('This text has arg-theme: Arg2 and Arg1');
+      done();
     });
   });
 
